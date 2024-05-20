@@ -20,7 +20,7 @@ class CrabCheckWeb extends StatelessWidget {
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
               .apply(bodyColor: colorScheme.onBackground),
           primaryColor: colorScheme.primary),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
