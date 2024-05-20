@@ -21,5 +21,61 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
                 key.currentState!.openDrawer();
               },
               icon: const Icon(Icons.menu)),
+      title: Row(
+        children: [
+          Visibility(
+              visible: !Responsiveness.isSmallScreen(context),
+              child: Text(
+                "Dashboard",
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          Expanded(child: Container()),
+          IconButton(
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.black,
+              ),
+              onPressed: () {}),
+          Container(
+            width: 1,
+            height: 22,
+            color: Colors.grey,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          const Text(
+            "Keannu Gran",
+            style: TextStyle(color: Colors.grey, fontSize: 15),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: colorScheme.tertiary.withOpacity(.5),
+                borderRadius: BorderRadius.circular(30)),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.all(2),
+              margin: const EdgeInsets.all(2),
+              child: CircleAvatar(
+                backgroundColor: colorScheme.background,
+                child: const Icon(
+                  Icons.person_outline,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+      iconTheme: const IconThemeData(color: Colors.black),
       elevation: 0,
+      backgroundColor: Colors.transparent,
     );
