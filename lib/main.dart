@@ -1,9 +1,11 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
+  Get.put(MenuController());
   runApp(const CrabCheckWeb());
 }
 
