@@ -1,3 +1,3 @@
-import 'package:crabcheckweb1/widgets/menu_controller.dart';
+import 'package:crabcheckweb1/widgets/custom_menu_controller.dart';
 
-MenuController menuController = MenuController.instance;
+CustomMenuController menuController = CustomMenuController.instance;

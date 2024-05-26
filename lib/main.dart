@@ -1,11 +1,13 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
+import 'package:crabcheckweb1/widgets/custom_menu_controller.dart'
+    as custom_menu_controller;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  Get.put(MenuController());
+  Get.put(custom_menu_controller.CustomMenuController());
   runApp(const CrabCheckWeb());
 }
 

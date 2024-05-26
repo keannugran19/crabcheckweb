@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:crabcheckweb1/routing/routes.dart';
 import 'package:get/get.dart';
 
-class MenuController extends GetxController {
-  static MenuController instance = Get.find();
+class CustomMenuController extends GetxController {
+  static CustomMenuController instance = Get.find();
   var activeItem = dashboardPageRoute.obs;
 
   var hoverItem = "".obs;
