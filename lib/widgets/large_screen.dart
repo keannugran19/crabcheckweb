@@ -1,4 +1,5 @@
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/constants/local_navigator.dart';
 import 'package:crabcheckweb1/widgets/side_menu.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,7 @@ class LargeScreen extends StatelessWidget {
         ),
         Expanded(
           flex: 3,
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-          ),
+          child: localNavigator(),
         )
       ],
     );

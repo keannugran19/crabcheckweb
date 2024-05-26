@@ -26,7 +26,7 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
           Visibility(
               visible: !Responsiveness.isSmallScreen(context),
               child: Text(
-                "Dashboard",
+                "CrabCheck",
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 18,
