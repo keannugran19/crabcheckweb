@@ -1,6 +1,7 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/constants/controller.dart';
 import 'package:crabcheckweb1/widgets/responsiveness.dart';
+import 'package:crabcheckweb1/pages/maps/widgets/mapping.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +26,11 @@ class MapsPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ))
+            )),
+        const SizedBox(
+          height: 50,
+        ),
+        const Map()
       ],
     );
   }
