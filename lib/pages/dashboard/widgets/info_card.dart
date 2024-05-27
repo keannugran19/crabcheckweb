@@ -56,7 +56,7 @@ class InfoCard extends StatelessWidget {
                             color:
                                 isActive ? colorScheme.primary : Colors.grey)),
                     TextSpan(
-                        text: "$value\n",
+                        text: value,
                         style: TextStyle(
                             fontSize: 40,
                             color: isActive
