@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
+        extendBodyBehindAppBar: true,
         appBar: topNavigationBar(context, scaffoldKey),
         drawer: const Drawer(
           child: SideMenu(),
