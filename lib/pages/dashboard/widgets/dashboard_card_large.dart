@@ -11,11 +11,8 @@ class DashboardPageLargeScreen extends StatelessWidget {
 
     return Row(
       children: [
-        SizedBox(
-          width: width / 64,
-        ),
         InfoCard(
-            title: "Edible Crabs found",
+            title: "Edible Crabs",
             value: "56",
             onTap: () {},
             topColor: colorScheme.primary),
@@ -23,7 +20,7 @@ class DashboardPageLargeScreen extends StatelessWidget {
           width: width / 64,
         ),
         InfoCard(
-          title: "Inedible Crabs found",
+          title: "Inedible Crabs",
           value: "17",
           topColor: Colors.red,
           onTap: () {},
@@ -32,13 +29,10 @@ class DashboardPageLargeScreen extends StatelessWidget {
           width: width / 64,
         ),
         InfoCard(
-          title: "Total Crabs found",
+          title: "Total Crabs",
           value: "120",
           topColor: colorScheme.tertiary,
           onTap: () {},
-        ),
-        SizedBox(
-          width: width / 64,
         ),
       ],
     );

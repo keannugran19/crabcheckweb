@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 class InfoCardSmall extends StatelessWidget {
   final String title;
   final String value;
-  final Color topColor;
   final bool isActive;
   final void Function() onTap;
   const InfoCardSmall(
       {super.key,
       required this.title,
       required this.value,
-      required this.topColor,
       this.isActive = false,
       required this.onTap});
 
