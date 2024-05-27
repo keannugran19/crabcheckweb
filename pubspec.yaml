@@ -38,6 +38,8 @@ dependencies:
   google_fonts: ^6.2.1
   get: ^4.6.6
   data_table_2: ^2.5.12
+  firebase_core: ^2.31.1
+  firebase_auth: ^4.19.6
 
 dev_dependencies:
   flutter_test:

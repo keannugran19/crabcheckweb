@@ -1,4 +1,5 @@
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:crabcheckweb1/constants/controller.dart';
 import 'package:crabcheckweb1/widgets/responsiveness.dart';
@@ -51,7 +52,10 @@ class SideMenu extends StatelessWidget {
                         ? "Log out"
                         : itemName,
                     onTap: () {
-                      if (itemName == authenticationPageRoute) {}
+                      if (itemName == authenticationPageRoute) {
+                        Navigator.of(context).pop();
+                        Get.offAll(() => const AuthenticationPage());
+                      }
                       if (!menuController.isActive(itemName)) {
                         navigationController.navigateTo(itemName);
                         menuController.changeActiveItemTo(itemName);
