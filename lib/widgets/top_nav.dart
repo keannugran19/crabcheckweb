@@ -1,5 +1,7 @@
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/widgets/responsiveness.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
@@ -34,45 +36,18 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
                 ),
               )),
           Expanded(child: Container()),
-          IconButton(
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.black,
-              ),
-              onPressed: () {}),
-          Container(
-            width: 1,
-            height: 22,
-            color: Colors.grey,
-          ),
           const SizedBox(
             width: 10,
           ),
-          const Text(
-            "Keannu Gran",
-            style: TextStyle(color: Colors.grey, fontSize: 15),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: colorScheme.tertiary.withOpacity(.5),
-                borderRadius: BorderRadius.circular(30)),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              padding: const EdgeInsets.all(2),
-              margin: const EdgeInsets.all(2),
-              child: CircleAvatar(
-                backgroundColor: colorScheme.background,
-                child: const Icon(
-                  Icons.person_outline,
-                  color: Colors.black,
+          userEmail == null
+              ? const Text('No user is signed in.')
+              : Text(
+                  userEmail!,
+                  style: const TextStyle(color: Colors.grey, fontSize: 15),
                 ),
-              ),
-            ),
-          )
+          const SizedBox(
+            width: 10,
+          ),
         ],
       ),
       iconTheme: const IconThemeData(color: Colors.black),

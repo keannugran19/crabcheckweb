@@ -27,10 +27,12 @@ class MapsPage extends StatelessWidget {
                 ),
               ],
             )),
-        const SizedBox(
-          height: 50,
-        ),
-        const Map()
+
+        const Expanded(
+            child: Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: Map(),
+        )) // Wrap Map() with Expanded
       ],
     );
   }
