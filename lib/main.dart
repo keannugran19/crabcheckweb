@@ -1,6 +1,7 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
+import 'package:crabcheckweb1/pages/dashboard/dashboard.dart';
 import 'package:crabcheckweb1/widgets/custom_menu_controller.dart'
     as custom_menu_controller;
 import 'package:crabcheckweb1/constants/navigation_controller.dart'

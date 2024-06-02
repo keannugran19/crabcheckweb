@@ -13,21 +13,6 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Obx(() => Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                      top: Responsiveness.isSmallScreen(context) ? 56 : 6),
-                  child: Text(
-                    menuController.activeItem.value,
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.secondary),
-                  ),
-                ),
-              ],
-            )),
         Expanded(
           child: ListView(
             children: [

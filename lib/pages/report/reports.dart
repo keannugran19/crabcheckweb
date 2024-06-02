@@ -10,29 +10,12 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        Obx(
-          () => Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(
-                    top: Responsiveness.isSmallScreen(context) ? 56 : 6),
-                child: Text(
-                  menuController.activeItem.value,
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.secondary),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
+        SizedBox(
           height: 30,
         ),
-        const ReportsTable()
+        ReportsTable()
       ],
     );
   }
