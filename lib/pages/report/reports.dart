@@ -13,7 +13,7 @@ class ReportsPage extends StatelessWidget {
     return const Column(
       children: [
         SizedBox(
-          height: 30,
+          height: 60,
         ),
         ReportsTable()
       ],

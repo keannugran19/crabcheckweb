@@ -12,6 +12,7 @@ class DashboardPageLargeScreen extends StatelessWidget {
 
     return Column(
       children: [
+        // dropdown menu to filter species
         const Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

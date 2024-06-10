@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'info_card_small.dart';
+import 'package:crabcheckweb1/pages/dashboard/widgets/dashboard_dropdown.dart';
 
 class DashBoardPageSmallScreen extends StatelessWidget {
   const DashBoardPageSmallScreen({super.key});
@@ -12,6 +13,16 @@ class DashBoardPageSmallScreen extends StatelessWidget {
       height: 400,
       child: Column(
         children: [
+          // dropdown menu to filter species
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              DropdownMenuDashboard(),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           InfoCardSmall(
             title: "Edible Crabs",
             value: "56",

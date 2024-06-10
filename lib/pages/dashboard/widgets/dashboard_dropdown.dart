@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+const List<String> list = <String>[
+  'All',
+  'Scylla serrata',
+  'Scylla olivacea',
+  'Scylla Paramamosain',
+  'Portunos Pelagicus',
+  'Zosimus Aeneus '
+];
 
 class DropdownMenuDashboard extends StatefulWidget {
   const DropdownMenuDashboard({super.key});
