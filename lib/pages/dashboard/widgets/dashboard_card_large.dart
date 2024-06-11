@@ -22,33 +22,63 @@ class DashboardPageLargeScreen extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
+
+        // first row displayed
         Row(
           children: [
-            InfoCard(
-                title: "Edible Crabs",
-                value: "56",
-                onTap: () {},
-                topColor: colorScheme.primary),
+            const InfoCard(
+                title: "Scylla Serrata", value: "56", topColor: Colors.brown),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              title: "Inedible Crabs",
+            const InfoCard(
+              title: "Scylla Olivacea",
               value: "17",
-              topColor: Colors.red,
-              onTap: () {},
+              topColor: Colors.orange,
             ),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              title: "Total Crabs",
+            const InfoCard(
+              title: "Scylla Paramamosain",
               value: "120",
-              topColor: colorScheme.tertiary,
-              onTap: () {},
+              topColor: Colors.green,
             ),
           ],
         ),
+
+        const SizedBox(
+          height: 20,
+        ),
+
+        // second row displayed
+        Center(
+          child: Row(
+            children: [
+              const InfoCard(
+                title: "Portunos Pelagicus",
+                value: "120",
+                topColor: Colors.grey,
+              ),
+              SizedBox(
+                width: width / 64,
+              ),
+              const InfoCard(
+                title: "Zosimus Aeneus",
+                value: "120",
+                topColor: Colors.purple,
+              ),
+              SizedBox(
+                width: width / 64,
+              ),
+              const InfoCard(
+                title: "Total Crabs",
+                value: "120",
+                topColor: Colors.white,
+              ),
+            ],
+          ),
+        )
       ],
     );
   }

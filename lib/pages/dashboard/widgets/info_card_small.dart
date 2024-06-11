@@ -4,28 +4,22 @@ import 'package:flutter/material.dart';
 class InfoCardSmall extends StatelessWidget {
   final String title;
   final String value;
-  final bool isActive;
-  final void Function() onTap;
-  const InfoCardSmall(
-      {super.key,
-      required this.title,
-      required this.value,
-      this.isActive = false,
-      required this.onTap});
+  const InfoCardSmall({
+    super.key,
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
-        onTap: onTap,
         child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                  color: isActive ? colorScheme.primary : Colors.grey,
-                  width: .5),
+              border: Border.all(color: colorScheme.primary, width: .5),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,17 +27,17 @@ class InfoCardSmall extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.w300,
-                    color: isActive ? colorScheme.primary : Colors.grey,
+                    color: colorScheme.onBackground,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.w300,
-                    color: isActive ? colorScheme.primary : Colors.black,
+                    color: colorScheme.onBackground,
                   ),
                 ),
               ],

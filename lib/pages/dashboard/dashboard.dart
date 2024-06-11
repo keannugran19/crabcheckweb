@@ -53,7 +53,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
 
-              // bar graph
+              // BAR GRAPH
               Center(
                   child: Container(
                       height: 300,

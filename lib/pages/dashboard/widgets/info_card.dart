@@ -5,22 +5,18 @@ class InfoCard extends StatelessWidget {
   final String title;
   final String value;
   final Color topColor;
-  final bool isActive;
-  final void Function() onTap;
 
-  const InfoCard(
-      {super.key,
-      required this.title,
-      required this.value,
-      required this.topColor,
-      this.isActive = false,
-      required this.onTap});
+  const InfoCard({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.topColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
-        onTap: onTap,
         child: Container(
           height: 120,
           alignment: Alignment.center,
@@ -52,16 +48,11 @@ class InfoCard extends StatelessWidget {
                     TextSpan(
                         text: "$title\n",
                         style: TextStyle(
-                            fontSize: 16,
-                            color:
-                                isActive ? colorScheme.primary : Colors.grey)),
+                            fontSize: 16, color: colorScheme.onBackground)),
                     TextSpan(
                         text: value,
                         style: TextStyle(
-                            fontSize: 40,
-                            color: isActive
-                                ? colorScheme.primary
-                                : colorScheme.secondary))
+                            fontSize: 40, color: colorScheme.onBackground))
                   ])),
               Expanded(child: Container())
             ],

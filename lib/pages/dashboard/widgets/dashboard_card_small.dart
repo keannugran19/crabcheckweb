@@ -10,7 +10,7 @@ class DashBoardPageSmallScreen extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      height: 400,
+      height: 600,
       child: Column(
         children: [
           // dropdown menu to filter species
@@ -23,27 +23,44 @@ class DashBoardPageSmallScreen extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          InfoCardSmall(
-            title: "Edible Crabs",
+          const InfoCardSmall(
+            title: "Scylla Serrata",
             value: "56",
-            onTap: () {},
-            isActive: true,
           ),
           SizedBox(
             height: width / 64,
           ),
-          InfoCardSmall(
-            title: "Inedible Crabs",
+          const InfoCardSmall(
+            title: "Scylla Olivacea",
             value: "17",
-            onTap: () {},
           ),
           SizedBox(
             height: width / 64,
           ),
-          InfoCardSmall(
-            title: "Total Crabs",
+          const InfoCardSmall(
+            title: "Scylla Paramamosain",
             value: "120",
-            onTap: () {},
+          ),
+          SizedBox(
+            height: width / 64,
+          ),
+          const InfoCardSmall(
+            title: "Portunos Pelagicus",
+            value: "120",
+          ),
+          SizedBox(
+            height: width / 64,
+          ),
+          const InfoCardSmall(
+            title: "Zosimus Aeneus",
+            value: "120",
+          ),
+          SizedBox(
+            height: width / 64,
+          ),
+          const InfoCardSmall(
+            title: "Total",
+            value: "120",
           ),
         ],
       ),
