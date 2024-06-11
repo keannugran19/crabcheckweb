@@ -1,3 +1,4 @@
+import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/dashboard_card_large.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/dashboard_card_small.dart';
@@ -40,14 +41,22 @@ class _DashboardPageState extends State<DashboardPage> {
               else
                 const DashboardPageLargeScreen(),
 
-              const SizedBox(
-                height: 20,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20.0, 0.0, 2.0),
+                child: Text(
+                  "Monthly Total:",
+                  style: TextStyle(
+                    color: colorScheme.secondary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
 
               // bar graph
               Center(
                   child: Container(
-                      height: 200,
+                      height: 300,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
@@ -57,8 +66,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                 blurRadius: 12),
                           ],
                           borderRadius: BorderRadius.circular(8)),
-                      child: BarGraph(
-                        totalCrabs: totalCrabs,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: BarGraph(
+                          totalCrabs: totalCrabs,
+                        ),
                       )))
             ],
           ),
