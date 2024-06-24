@@ -1,7 +1,6 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
-import 'package:crabcheckweb1/pages/dashboard/dashboard.dart';
 import 'package:crabcheckweb1/widgets/custom_menu_controller.dart'
     as custom_menu_controller;
 import 'package:crabcheckweb1/constants/navigation_controller.dart'
@@ -30,6 +29,7 @@ void main() async {
 
   Get.put(custom_menu_controller.CustomMenuController());
   Get.put(navigation_controller.NavigationController());
+
   runApp(const CrabCheckWeb());
 }
 
@@ -45,8 +45,6 @@ class _CrabCheckWebState extends State<CrabCheckWeb> {
 
   Future getUserInfo() async {
     await getUser();
-    setState(() {});
-    print(uid);
   }
 
   @override
@@ -58,15 +56,14 @@ class _CrabCheckWebState extends State<CrabCheckWeb> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Crabcheck Dashboard",
-      theme: ThemeData(
-          scaffoldBackgroundColor: colorScheme.background,
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-              .apply(bodyColor: colorScheme.onBackground),
-          primaryColor: colorScheme.primary),
-      navigatorKey: navigatorKey,
-      home: const AuthenticationPage(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: "Crabcheck Dashboard",
+        theme: ThemeData(
+            scaffoldBackgroundColor: colorScheme.background,
+            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+                .apply(bodyColor: colorScheme.onBackground),
+            primaryColor: colorScheme.primary),
+        navigatorKey: navigatorKey,
+        home: const AuthenticationPage());
   }
 }

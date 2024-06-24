@@ -1,22 +1,32 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class InfoCard extends StatelessWidget {
+class InfoCard extends StatefulWidget {
   final String title;
   final String value;
   final Color topColor;
+  final bool isActive;
+  final Function() onTap;
 
   const InfoCard({
     super.key,
     required this.title,
     required this.value,
     required this.topColor,
+    required this.isActive,
+    required this.onTap,
   });
 
+  @override
+  State<InfoCard> createState() => _InfoCardState();
+}
+
+class _InfoCardState extends State<InfoCard> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
+        onTap: widget.onTap,
         child: Container(
           height: 120,
           alignment: Alignment.center,
@@ -35,7 +45,7 @@ class InfoCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      color: topColor,
+                      color: widget.topColor,
                       height: 5,
                     ),
                   )
@@ -46,13 +56,19 @@ class InfoCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   text: TextSpan(children: [
                     TextSpan(
-                        text: "$title\n",
+                        text: "${widget.title}\n",
                         style: TextStyle(
-                            fontSize: 16, color: colorScheme.onBackground)),
+                            fontSize: 16,
+                            color: widget.isActive
+                                ? colorScheme.primary
+                                : colorScheme.onBackground)),
                     TextSpan(
-                        text: value,
+                        text: widget.value,
                         style: TextStyle(
-                            fontSize: 40, color: colorScheme.onBackground))
+                            fontSize: 40,
+                            color: widget.isActive
+                                ? colorScheme.primary
+                                : colorScheme.onBackground)),
                   ])),
               Expanded(child: Container())
             ],
