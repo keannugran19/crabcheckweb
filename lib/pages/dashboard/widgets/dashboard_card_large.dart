@@ -13,11 +13,54 @@ class DashboardPageLargeScreen extends StatefulWidget {
 }
 
 class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
-  Set<String> activeTitles = {};
+  String activeTitle = '';
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
+    late List<double> graphData;
+    late String graphTitle;
+
+    // Determine what graphTitle to put on the variable graphTitle
+    if (activeTitle.contains('Scylla Serrata')) {
+      graphTitle = 'Scylla Serrata';
+    } else if (activeTitle.contains('Scylla Olivacea')) {
+      graphTitle = 'Scylla Olivacea';
+    } else if (activeTitle.contains('Scylla Paramamosain')) {
+      graphTitle = 'Scylla Paramamosain';
+    } else if (activeTitle.contains('Portunos Pelagicus')) {
+      graphTitle = 'Portunos Pelagicus';
+    } else if (activeTitle.contains('Zosimus Aeneus')) {
+      graphTitle = 'Zosimus Aeneus';
+    } else if (activeTitle.contains('Total Crabs')) {
+      graphTitle = 'Total Crabs';
+    } else {
+      graphTitle = 'Total Crabs';
+    }
+
+    // Assign graph data based on the graphTitle
+    switch (graphTitle) {
+      case 'Scylla Serrata':
+        graphData = scyllaSerrata;
+        break;
+      case 'Scylla Olivacea':
+        graphData = scyllaOlivacea;
+        break;
+      case 'Scylla Paramamosain':
+        graphData = scyllaParamamosain;
+        break;
+      case 'Portunos Pelagicus':
+        graphData = portunosPelagicus;
+        break;
+      case 'Zosimus Aeneus':
+        graphData = zosimusAeneus;
+        break;
+      case 'Total Crabs':
+        graphData = totalCrabs;
+        break;
+      default:
+    }
 
     return Column(
       children: [
@@ -28,14 +71,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Scylla Serrata",
               value: "56",
               topColor: Colors.brown,
-              isActive: activeTitles.contains("Scylla Serrata"),
+              isActive: activeTitle == "Scylla Serrata",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Scylla Serrata")) {
-                    activeTitles.remove("Scylla Serrata");
-                  } else {
-                    activeTitles.add("Scylla Serrata");
-                  }
+                  activeTitle = "Scylla Serrata";
                 });
               },
             ),
@@ -46,14 +85,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Scylla Olivacea",
               value: "43",
               topColor: Colors.orange,
-              isActive: activeTitles.contains("Scylla Olivacea"),
+              isActive: activeTitle == "Scylla Olivacea",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Scylla Olivacea")) {
-                    activeTitles.remove("Scylla Olivacea");
-                  } else {
-                    activeTitles.add("Scylla Olivacea");
-                  }
+                  activeTitle = "Scylla Olivacea";
                 });
               },
             ),
@@ -64,14 +99,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Scylla Paramamosain",
               value: "65",
               topColor: Colors.green,
-              isActive: activeTitles.contains("Scylla Paramamosain"),
+              isActive: activeTitle == "Scylla Paramamosain",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Scylla Paramamosain")) {
-                    activeTitles.remove("Scylla Paramamosain");
-                  } else {
-                    activeTitles.add("Scylla Paramamosain");
-                  }
+                  activeTitle = "Scylla Paramamosain";
                 });
               },
             ),
@@ -89,14 +120,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Portunos Pelagicus",
               value: "24",
               topColor: Colors.grey,
-              isActive: activeTitles.contains("Portunos Pelagicus"),
+              isActive: activeTitle == "Portunos Pelagicus",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Portunos Pelagicus")) {
-                    activeTitles.remove("Portunos Pelagicus");
-                  } else {
-                    activeTitles.add("Portunos Pelagicus");
-                  }
+                  activeTitle = "Portunos Pelagicus";
                 });
               },
             ),
@@ -107,14 +134,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Zosimus Aeneus",
               value: "12",
               topColor: Colors.purple,
-              isActive: activeTitles.contains("Zosimus Aeneus"),
+              isActive: activeTitle == "Zosimus Aeneus",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Zosimus Aeneus")) {
-                    activeTitles.remove("Zosimus Aeneus");
-                  } else {
-                    activeTitles.add("Zosimus Aeneus");
-                  }
+                  activeTitle = "Zosimus Aeneus";
                 });
               },
             ),
@@ -125,14 +148,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               title: "Total Crabs",
               value: "200",
               topColor: Colors.white,
-              isActive: activeTitles.contains("Total Crabs"),
+              isActive: activeTitle == "Total Crabs",
               onTap: () {
                 setState(() {
-                  if (activeTitles.contains("Total Crabs")) {
-                    activeTitles.remove("Total Crabs");
-                  } else {
-                    activeTitles.add("Total Crabs");
-                  }
+                  activeTitle = "Total Crabs";
                 });
               },
             ),
@@ -165,7 +184,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: BarGraph(
-                totalCrabs: totalCrabs,
+                totalCrabs: graphData,
               ),
             ))
       ],
