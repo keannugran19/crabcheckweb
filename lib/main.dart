@@ -9,20 +9,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
-            apiKey: "AIzaSyBlUkYyKAE5e4cSzEKOfvqCQ-7qkeq7fvE",
-            authDomain: "crabcheck-c8aea.firebaseapp.com",
-            projectId: "crabcheck-c8aea",
-            storageBucket: "crabcheck-c8aea.appspot.com",
-            messagingSenderId: "819593173831",
-            appId: "1:819593173831:web:95d808519e9ec6e1514a62",
-            measurementId: "G-T0JLWL3VV2"));
+        options: DefaultFirebaseOptions.currentPlatform);
   } catch (e) {
     print('Firebase initialization error: $e');
   }

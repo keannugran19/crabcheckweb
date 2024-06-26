@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
@@ -13,7 +14,45 @@ class DashboardPageLargeScreen extends StatefulWidget {
 }
 
 class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
+  // call the database
+  final db = FirebaseFirestore.instance;
+  // count
+  int scyllaSerrataCount = 0;
+  int scyllaOlivaceaCount = 0;
+  int scyllaParamamosainCount = 0;
+  int portunosPelagicusCount = 0;
+  int zosimusAeneusCount = 0;
+
   String activeTitle = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAllCounts();
+  }
+
+  Future<void> fetchAllCounts() async {
+    final scyllaSerrataCount = await fetchCount('Scylla Serrata');
+    final scyllaOlivaceaCount = await fetchCount('Scylla Olivacea');
+    final scyllaParamamosainCount = await fetchCount('Scylla Paramamosain');
+    final portunosPelagicusCount = await fetchCount('Portunos Pelagicus');
+    final zosimusAeneusCount = await fetchCount('Zosimus Aeneus');
+
+    setState(() {
+      this.scyllaSerrataCount = scyllaSerrataCount;
+      this.scyllaOlivaceaCount = scyllaOlivaceaCount;
+      this.scyllaParamamosainCount = scyllaParamamosainCount;
+      this.portunosPelagicusCount = portunosPelagicusCount;
+      this.zosimusAeneusCount = zosimusAeneusCount;
+    });
+  }
+
+  Future<int> fetchCount(String species) async {
+    final crabRef = db.collection('crab');
+    final query = crabRef.where('species', isEqualTo: species);
+    final snapshot = await query.count().get();
+    return snapshot.count!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +108,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           children: [
             InfoCard(
               title: "Scylla Serrata",
-              value: "56",
+              value: scyllaSerrataCount.toString(),
               topColor: Colors.brown,
               isActive: activeTitle == "Scylla Serrata",
               onTap: () {
@@ -83,7 +122,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             ),
             InfoCard(
               title: "Scylla Olivacea",
-              value: "43",
+              value: scyllaOlivaceaCount.toString(),
               topColor: Colors.orange,
               isActive: activeTitle == "Scylla Olivacea",
               onTap: () {
@@ -97,7 +136,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             ),
             InfoCard(
               title: "Scylla Paramamosain",
-              value: "65",
+              value: scyllaParamamosainCount.toString(),
               topColor: Colors.green,
               isActive: activeTitle == "Scylla Paramamosain",
               onTap: () {
@@ -118,7 +157,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           children: [
             InfoCard(
               title: "Portunos Pelagicus",
-              value: "24",
+              value: portunosPelagicusCount.toString(),
               topColor: Colors.grey,
               isActive: activeTitle == "Portunos Pelagicus",
               onTap: () {
@@ -132,7 +171,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             ),
             InfoCard(
               title: "Zosimus Aeneus",
-              value: "12",
+              value: zosimusAeneusCount.toString(),
               topColor: Colors.purple,
               isActive: activeTitle == "Zosimus Aeneus",
               onTap: () {
