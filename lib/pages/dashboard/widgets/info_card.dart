@@ -1,7 +1,7 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class InfoCard extends StatefulWidget {
+class InfoCard extends StatelessWidget {
   final String title;
   final String value;
   final Color topColor;
@@ -18,15 +18,10 @@ class InfoCard extends StatefulWidget {
   });
 
   @override
-  State<InfoCard> createState() => _InfoCardState();
-}
-
-class _InfoCardState extends State<InfoCard> {
-  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
-        onTap: widget.onTap,
+        onTap: onTap,
         child: Container(
           height: 120,
           alignment: Alignment.center,
@@ -45,7 +40,7 @@ class _InfoCardState extends State<InfoCard> {
                 children: [
                   Expanded(
                     child: Container(
-                      color: widget.topColor,
+                      color: topColor,
                       height: 5,
                     ),
                   )
@@ -56,17 +51,17 @@ class _InfoCardState extends State<InfoCard> {
                   textAlign: TextAlign.center,
                   text: TextSpan(children: [
                     TextSpan(
-                        text: "${widget.title}\n",
+                        text: "$title\n",
                         style: TextStyle(
                             fontSize: 16,
-                            color: widget.isActive
+                            color: isActive
                                 ? colorScheme.primary
                                 : colorScheme.onBackground)),
                     TextSpan(
-                        text: widget.value,
+                        text: value,
                         style: TextStyle(
                             fontSize: 40,
-                            color: widget.isActive
+                            color: isActive
                                 ? colorScheme.primary
                                 : colorScheme.onBackground)),
                   ])),

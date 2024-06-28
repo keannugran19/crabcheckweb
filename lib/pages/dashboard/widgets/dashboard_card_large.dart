@@ -4,6 +4,7 @@ import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/info_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class DashboardPageLargeScreen extends StatefulWidget {
   const DashboardPageLargeScreen({super.key});
@@ -22,15 +23,30 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   int scyllaParamamosainCount = 0;
   int portunosPelagicusCount = 0;
   int zosimusAeneusCount = 0;
+  // total count
+  int totalCount = 0;
+
+  // loading
+  bool isLoading = true;
 
   String activeTitle = '';
 
+// run state
   @override
   void initState() {
     super.initState();
     fetchAllCounts();
   }
 
+  // restart the state of the dashboard
+  void restart() {
+    setState(() {
+      isLoading = true;
+    });
+    fetchAllCounts();
+  }
+
+// get all counts
   Future<void> fetchAllCounts() async {
     final scyllaSerrataCount = await fetchCount('Scylla Serrata');
     final scyllaOlivaceaCount = await fetchCount('Scylla Olivacea');
@@ -44,9 +60,15 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       this.scyllaParamamosainCount = scyllaParamamosainCount;
       this.portunosPelagicusCount = portunosPelagicusCount;
       this.zosimusAeneusCount = zosimusAeneusCount;
+      totalCount = scyllaSerrataCount +
+          scyllaOlivaceaCount +
+          scyllaParamamosainCount +
+          portunosPelagicusCount +
+          zosimusAeneusCount;
     });
   }
 
+// query of getting count data from the database
   Future<int> fetchCount(String species) async {
     final crabRef = db.collection('crab');
     final query = crabRef.where('species', isEqualTo: species);
@@ -104,6 +126,20 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     return Column(
       children: [
         // first row displayed
+
+        // Page restart button
+        Align(
+          alignment: Alignment.topRight,
+          child: ElevatedButton(
+              onPressed: restart,
+              child: Icon(
+                Icons.restart_alt,
+                color: colorScheme.primary,
+              )),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
         Row(
           children: [
             InfoCard(
@@ -185,7 +221,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             ),
             InfoCard(
               title: "Total Crabs",
-              value: "200",
+              value: totalCount.toString(),
               topColor: Colors.white,
               isActive: activeTitle == "Total Crabs",
               onTap: () {
