@@ -1,3 +1,4 @@
+import 'dart:developer' as devtools;
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
@@ -18,7 +19,7 @@ void main() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
   } catch (e) {
-    print('Firebase initialization error: $e');
+    devtools.log('Firebase initialization error: $e');
   }
 
   Get.put(custom_menu_controller.CustomMenuController());

@@ -5,7 +5,6 @@ import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/info_card.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DashboardPageLargeScreen extends StatefulWidget {
   const DashboardPageLargeScreen({super.key});
@@ -247,17 +246,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                // Row(children: [
-                //   // top texts before graph and chart
-                //   Text(
-                //     "Monthly Total:",
-                //     style: TextStyle(
-                //       color: colorScheme.secondary,
-                //       fontSize: 20,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ]),
                 // BAR GRAPH
                 Expanded(
                   flex: 2,

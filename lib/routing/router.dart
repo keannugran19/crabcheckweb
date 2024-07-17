@@ -1,4 +1,3 @@
-import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/dashboard/dashboard.dart';
 import 'package:crabcheckweb1/pages/maps/maps.dart';
 import 'package:crabcheckweb1/pages/report/reports.dart';

@@ -3,6 +3,7 @@ import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools;
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});
@@ -190,7 +191,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                               textControllerPassword.text)
                           .then((result) {
                         if (result != null) {
-                          print(result);
+                          devtools.log(result.toString());
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
                             fullscreenDialog: true,
@@ -206,7 +207,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           });
                         }
                       }).catchError((error) {
-                        print('Login Error: $error');
+                        devtools.log('Login Error: $error');
                         setState(() {
                           loginStatus = 'Error occured while logging in';
                         });
