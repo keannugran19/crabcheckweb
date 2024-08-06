@@ -6,13 +6,10 @@ class MapsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        SizedBox(
-          height: 60,
-        ),
-        Map()
-      ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: const Map(),
     );
   }
 }
