@@ -17,13 +17,37 @@ class Map extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
         ),
-        const MarkerLayer(
+        MarkerLayer(
           markers: [
             Marker(
-              point: LatLng(7.2931, 125.7004),
-              width: 20,
-              height: 20,
-              child: Icon(Icons.location_pin),
+              point: const LatLng(7.2931, 125.7004),
+              width: 100,
+              height: 100,
+              child: Image.asset("lib/assets/images/crab_brown_loc.png"),
+            ),
+            Marker(
+              point: const LatLng(7.2896, 125.6945),
+              width: 100,
+              height: 100,
+              child: Image.asset("lib/assets/images/crab_green_loc.png"),
+            ),
+            Marker(
+              point: const LatLng(7.2830, 125.6894),
+              width: 100,
+              height: 100,
+              child: Image.asset("lib/assets/images/crab_grey_loc.png"),
+            ),
+            Marker(
+              point: const LatLng(7.2891, 125.6942),
+              width: 100,
+              height: 100,
+              child: Image.asset("lib/assets/images/crab_orange_loc.png"),
+            ),
+            Marker(
+              point: const LatLng(7.2928, 125.6965),
+              width: 100,
+              height: 100,
+              child: Image.asset("lib/assets/images/crab_purple_loc.png"),
             ),
           ],
         ),
