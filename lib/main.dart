@@ -54,9 +54,9 @@ class _CrabCheckWebState extends State<CrabCheckWeb> {
         debugShowCheckedModeBanner: false,
         title: "Crabcheck Dashboard",
         theme: ThemeData(
-            scaffoldBackgroundColor: colorScheme.background,
+            scaffoldBackgroundColor: colorScheme.surface,
             textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-                .apply(bodyColor: colorScheme.onBackground),
+                .apply(bodyColor: colorScheme.onSurface),
             primaryColor: colorScheme.primary),
         navigatorKey: navigatorKey,
         home: const AuthenticationPage());

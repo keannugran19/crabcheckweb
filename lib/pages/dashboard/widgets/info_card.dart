@@ -56,14 +56,14 @@ class InfoCard extends StatelessWidget {
                             fontSize: 16,
                             color: isActive
                                 ? colorScheme.primary
-                                : colorScheme.onBackground)),
+                                : colorScheme.onSurface)),
                     TextSpan(
                         text: value,
                         style: TextStyle(
                             fontSize: 40,
                             color: isActive
                                 ? colorScheme.primary
-                                : colorScheme.onBackground)),
+                                : colorScheme.onSurface)),
                   ])),
               Expanded(child: Container())
             ],

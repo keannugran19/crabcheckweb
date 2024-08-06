@@ -78,7 +78,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: colorScheme.background.withOpacity(.85),
+              color: colorScheme.surface.withOpacity(.85),
             ),
             constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
             padding: const EdgeInsets.all(24),
