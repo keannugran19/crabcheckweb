@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/constants/loading_screen.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -184,6 +185,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       textFocusNodeEmail.unfocus();
                       textFocusNodePassword.unfocus();
                     });
+
                     if (_validateEmail(textControllerEmail.text) == null &&
                         _validatePassword(textControllerPassword.text) ==
                             null) {
@@ -192,11 +194,25 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           .then((result) {
                         if (result != null) {
                           devtools.log(result.toString());
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (context) => HomePage(),
-                          ));
+
+                          // Navigate to the animation screen
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => const LoadingScreen(),
+                            ),
+                          );
+
+                          // Wait for a short duration to show the animation, then navigate to HomePage
+                          Future.delayed(const Duration(seconds: 3), () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                fullscreenDialog: true,
+                                builder: (context) => HomePage(),
+                              ),
+                            );
+                          });
+
                           setState(() {
                             loginStatus = 'You have successfully logged in';
                             _errorMessage = null;
@@ -209,7 +225,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       }).catchError((error) {
                         devtools.log('Login Error: $error');
                         setState(() {
-                          loginStatus = 'Error occured while logging in';
+                          loginStatus = 'Error occurred while logging in';
                         });
                       });
                     } else {
@@ -217,6 +233,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                         loginStatus = 'Please enter email & password';
                       });
                     }
+
                     setState(() {
                       _isLogginIn = false;
                       textControllerEmail.text = '';
