@@ -249,7 +249,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                     Container(
                       height: 400,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
