@@ -247,7 +247,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                   children: [
                     //* BAR GRAPH CONTAINER
                     Container(
-                      height: 300,
+                      height: 400,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -264,7 +264,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
                     //* PIE CHART CONTAINER
                     Container(
-                      height: 300,
+                      height: 400,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
