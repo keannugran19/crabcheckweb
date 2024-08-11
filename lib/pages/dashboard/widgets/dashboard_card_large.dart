@@ -3,7 +3,7 @@ import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/info_card.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:crabcheckweb1/pages/dashboard/widgets/pie_chart.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPageLargeScreen extends StatefulWidget {
@@ -123,6 +123,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       default:
     }
 
+//* DASHBOARD
     return Column(
       children: [
         // Page restart button
@@ -189,7 +190,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           height: 20,
         ),
 
-        // second row displayed
+        //* second row displayed
         Row(
           children: [
             InfoCard(
@@ -238,50 +239,53 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           height: 20,
         ),
 
-        Container(
-          color: Colors.white,
-          height: 300,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
+        Column(
+          children: [
+            Column(
               children: [
-                // BAR GRAPH
-                Expanded(
-                  flex: 2,
-                  child: BarGraph(
-                    totalCrabs: graphData,
-                  ),
-                ),
+                Column(
+                  children: [
+                    //* BAR GRAPH CONTAINER
+                    Container(
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: BarGraph(
+                          totalCrabs: graphData,
+                        ),
+                      ),
+                    ),
 
-                // PIE CHART
-                Expanded(
-                  flex: 1,
-                  child: PieChart(
-                      swapAnimationDuration: const Duration(milliseconds: 750),
-                      swapAnimationCurve: Curves.easeInOutQuint,
-                      PieChartData(sections: [
-                        PieChartSectionData(
-                            value: scyllaSerrataCount.toDouble(),
-                            color: Colors.brown),
-                        PieChartSectionData(
-                            value: scyllaOlivaceaCount.toDouble(),
-                            color: Colors.orange),
-                        PieChartSectionData(
-                            value: scyllaParamamosainCount.toDouble(),
-                            color: Colors.green),
-                        PieChartSectionData(
-                            value: portunosPelagicusCount.toDouble(),
-                            color: Colors.grey),
-                        PieChartSectionData(
-                            value: zosimusAeneusCount.toDouble(),
-                            color: Colors.purple),
-                      ])),
+                    const SizedBox(height: 20),
+
+                    //* PIE CHART CONTAINER
+                    Container(
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: PieChartDisplay(
+                          scyllaOlivaceaCount: scyllaOlivaceaCount,
+                          scyllaSerrataCount: scyllaSerrataCount,
+                          scyllaParamamosainCount: scyllaParamamosainCount,
+                          portunosPelagicusCount: portunosPelagicusCount,
+                          zosimusAeneusCount: zosimusAeneusCount,
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               ],
-            ),
-          ),
-        ),
+            )
+          ],
+        )
       ],
     );
   }
