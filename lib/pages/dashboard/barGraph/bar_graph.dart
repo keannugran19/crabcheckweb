@@ -1,16 +1,56 @@
-import 'dart:math';
-
-import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BarGraph extends StatelessWidget {
   final List totalCrabs;
-  const BarGraph({super.key, required this.totalCrabs});
+
+  // variable for changing bar rod color
+  final String activeTitle;
+
+  const BarGraph({
+    super.key,
+    required this.totalCrabs,
+    required this.activeTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // switch statement for changing colors of bar rod
+    Color? rodColor;
+    Color? rodColorUnfilled;
+
+    switch (activeTitle) {
+      case 'Scylla Serrata':
+        rodColor = Colors.brown;
+        rodColorUnfilled = Colors.brown[200];
+        break;
+      case 'Scylla Olivacea':
+        rodColor = Colors.orange;
+        rodColorUnfilled = Colors.orange[200];
+        break;
+      case 'Scylla Paramamosain':
+        rodColor = Colors.green;
+        rodColorUnfilled = Colors.green[200];
+        break;
+      case 'Portunos Pelagicus':
+        rodColor = Colors.blue;
+        rodColorUnfilled = Colors.blue[200];
+        break;
+      case 'Zosimus Aeneus':
+        rodColor = Colors.purple;
+        rodColorUnfilled = Colors.purple[200];
+        break;
+      case 'Total Crabs':
+        rodColor = Colors.grey;
+        rodColorUnfilled = Colors.white;
+        break;
+      default:
+        rodColor = Colors.grey;
+        rodColorUnfilled = Colors.white;
+    }
+
+// data to display on bargraph
     BarData myBarData = BarData(
         januaryTotal: totalCrabs[0],
         februaryTotal: totalCrabs[1],
@@ -58,13 +98,13 @@ class BarGraph extends StatelessWidget {
             barRods: [
               BarChartRodData(
                 toY: data.y,
-                color: colorScheme.secondary,
+                color: rodColor,
                 width: 25,
                 borderRadius: BorderRadius.circular(20),
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,
                   toY: 150,
-                  color: colorScheme.secondary.withOpacity(0.3),
+                  color: rodColorUnfilled,
                 ),
               ),
             ],

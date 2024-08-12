@@ -196,7 +196,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             InfoCard(
               title: "Portunos Pelagicus",
               value: portunosPelagicusCount.toString(),
-              topColor: Colors.grey,
+              topColor: Colors.blue,
               isActive: activeTitle == "Portunos Pelagicus",
               onTap: () {
                 setState(() {
@@ -251,11 +251,22 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.1), // Shadow color with reduced opacity
+                            spreadRadius: 1, // Spread radius
+                            blurRadius: 5, // Blur radius for the shadow
+                            offset: const Offset(0,
+                                0), // Horizontal and vertical offset of the shadow
+                          ),
+                        ],
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: BarGraph(
                           totalCrabs: graphData,
+                          activeTitle: activeTitle,
                         ),
                       ),
                     ),
