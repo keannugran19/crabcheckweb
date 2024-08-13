@@ -3,7 +3,7 @@ import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/info_card.dart';
-import 'package:crabcheckweb1/pages/dashboard/widgets/pie_chart.dart';
+import 'package:crabcheckweb1/pages/dashboard/pieChart/pie_chart.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPageLargeScreen extends StatefulWidget {
@@ -241,62 +241,58 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
         Column(
           children: [
-            Column(
-              children: [
-                Column(
-                  children: [
-                    //* BAR GRAPH CONTAINER
-                    Container(
-                      height: 400,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(
-                                0.1), // Shadow color with reduced opacity
-                            spreadRadius: 1, // Spread radius
-                            blurRadius: 5, // Blur radius for the shadow
-                            offset: const Offset(0,
-                                0), // Horizontal and vertical offset of the shadow
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: BarGraph(
-                          totalCrabs: graphData,
-                          activeTitle: activeTitle,
-                        ),
-                      ),
-                    ),
+            Container(
+              height: 400,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.black.withOpacity(
+                //         0.1), // Shadow color with reduced opacity
+                //     spreadRadius: 1, // Spread radius
+                //     blurRadius: 5, // Blur radius for the shadow
+                //     offset: const Offset(1,
+                //         1), // Horizontal and vertical offset of the shadow
+                //   ),
+                // ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: BarGraph(
+                  totalCrabs: graphData,
+                  activeTitle: activeTitle,
+                ),
+              ),
+            ),
 
-                    const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-                    //* PIE CHART CONTAINER
-                    Container(
-                      height: 400,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: PieChartDisplay(
-                          scyllaOlivaceaCount: scyllaOlivaceaCount,
-                          scyllaSerrataCount: scyllaSerrataCount,
-                          scyllaParamamosainCount: scyllaParamamosainCount,
-                          portunosPelagicusCount: portunosPelagicusCount,
-                          zosimusAeneusCount: zosimusAeneusCount,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+            //* PIE CHART CONTAINER
+            SizedBox(
+              height: 400,
+              width: width,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: PieChartDisplay(
+                    scyllaOlivaceaCount: scyllaOlivaceaCount,
+                    scyllaSerrataCount: scyllaSerrataCount,
+                    scyllaParamamosainCount: scyllaParamamosainCount,
+                    portunosPelagicusCount: portunosPelagicusCount,
+                    zosimusAeneusCount: zosimusAeneusCount,
+                  ),
+                ),
+              ),
             )
           ],
-        )
+        ),
+
+        const SizedBox(height: 20),
       ],
     );
   }
