@@ -48,7 +48,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
 // get all counts
   Future<void> fetchAllCounts() async {
-    final scyllaSerrataCount = await fetchCount('Scylla Serrata');
+    final scyllaSerrataCount = await fetchCount('Charybdis Feriatus');
     final scyllaOlivaceaCount = await fetchCount('Scylla Olivacea');
     final scyllaParamamosainCount = await fetchCount('Scylla Paramamosain');
     final portunosPelagicusCount = await fetchCount('Portunos Pelagicus');
@@ -70,7 +70,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
 // query of getting count data from the database
   Future<int> fetchCount(String species) async {
-    final crabRef = db.collection('crab');
+    final crabRef = db.collection('crabData');
     final query = crabRef.where('species', isEqualTo: species);
     final snapshot = await query.count().get();
     return snapshot.count!;
@@ -84,8 +84,8 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     late String graphTitle;
 
     // Determine what graphTitle to put on the variable graphTitle
-    if (activeTitle.contains('Scylla Serrata')) {
-      graphTitle = 'Scylla Serrata';
+    if (activeTitle.contains('Charybdis Feriatus')) {
+      graphTitle = 'Charybdis Feriatus';
     } else if (activeTitle.contains('Scylla Olivacea')) {
       graphTitle = 'Scylla Olivacea';
     } else if (activeTitle.contains('Scylla Paramamosain')) {
@@ -102,7 +102,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     // Assign graph data based on the graphTitle
     switch (graphTitle) {
-      case 'Scylla Serrata':
+      case 'Charybdis Feriatus':
         graphData = scyllaSerrata;
         break;
       case 'Scylla Olivacea':
@@ -145,13 +145,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         Row(
           children: [
             InfoCard(
-              title: "Scylla Serrata",
+              title: "Charybdis Feriatus",
               value: scyllaSerrataCount.toString(),
               topColor: Colors.brown,
-              isActive: activeTitle == "Scylla Serrata",
+              isActive: activeTitle == "Charybdis Feriatus",
               onTap: () {
                 setState(() {
-                  activeTitle = "Scylla Serrata";
+                  activeTitle = "Charybdis Feriatus";
                 });
               },
             ),
@@ -246,16 +246,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.black.withOpacity(
-                //         0.1), // Shadow color with reduced opacity
-                //     spreadRadius: 1, // Spread radius
-                //     blurRadius: 5, // Blur radius for the shadow
-                //     offset: const Offset(1,
-                //         1), // Horizontal and vertical offset of the shadow
-                //   ),
-                // ],
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
