@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph.dart';
-import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_graph_lists.dart';
 import 'package:crabcheckweb1/pages/dashboard/widgets/info_card.dart';
 import 'package:crabcheckweb1/pages/dashboard/pieChart/pie_chart.dart';
+import 'package:crabcheckweb1/services/firestore.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPageLargeScreen extends StatefulWidget {
@@ -15,65 +15,112 @@ class DashboardPageLargeScreen extends StatefulWidget {
 }
 
 class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
-  // call the database
-  final db = FirebaseFirestore.instance;
-  // count
-  int scyllaSerrataCount = 0;
+  // initiate firestore
+  final FirestoreService firestoreService = FirestoreService();
+
+// Monthly counts for each species
+  List<double> totalCrabs = List<double>.filled(12, 0);
+  List<double> charybdisFeriatus = List<double>.filled(12, 0);
+  List<double> scyllaOlivacea = List<double>.filled(12, 0);
+  List<double> scyllaParamamosain = List<double>.filled(12, 0);
+  List<double> portunosPelagicus = List<double>.filled(12, 0);
+  List<double> zosimusAeneus = List<double>.filled(12, 0);
+
+// Total counts for each species
+  int charybdisFeriatusCount = 0;
   int scyllaOlivaceaCount = 0;
   int scyllaParamamosainCount = 0;
   int portunosPelagicusCount = 0;
   int zosimusAeneusCount = 0;
-  // total count
   int totalCount = 0;
 
-  // loading
   bool isLoading = true;
-
   String activeTitle = '';
 
-// run state
   @override
   void initState() {
     super.initState();
     fetchAllCounts();
+    fetchCrabData();
   }
 
-  // restart the state of the dashboard
-  void restart() {
-    setState(() {
-      isLoading = true;
-    });
-    fetchAllCounts();
-  }
-
-// get all counts
   Future<void> fetchAllCounts() async {
-    final scyllaSerrataCount = await fetchCount('Charybdis Feriatus');
-    final scyllaOlivaceaCount = await fetchCount('Scylla Olivacea');
-    final scyllaParamamosainCount = await fetchCount('Scylla Paramamosain');
-    final portunosPelagicusCount = await fetchCount('Portunos Pelagicus');
-    final zosimusAeneusCount = await fetchCount('Zosimus Aeneus');
+    Map<String, Future<int>> countFutures = {
+      'Charybdis Feriatus': firestoreService.fetchCount('Charybdis Feriatus'),
+      'Scylla Olivacea': firestoreService.fetchCount('Scylla Olivacea'),
+      'Scylla Paramamosain': firestoreService.fetchCount('Scylla Paramamosain'),
+      'Portunos Pelagicus': firestoreService.fetchCount('Portunos Pelagicus'),
+      'Zosimus Aeneus': firestoreService.fetchCount('Zosimus Aeneus'),
+    };
+
+    Map<String, int> counts = {
+      for (var entry in countFutures.entries) entry.key: await entry.value,
+    };
 
     setState(() {
-      this.scyllaSerrataCount = scyllaSerrataCount;
-      this.scyllaOlivaceaCount = scyllaOlivaceaCount;
-      this.scyllaParamamosainCount = scyllaParamamosainCount;
-      this.portunosPelagicusCount = portunosPelagicusCount;
-      this.zosimusAeneusCount = zosimusAeneusCount;
-      totalCount = scyllaSerrataCount +
-          scyllaOlivaceaCount +
-          scyllaParamamosainCount +
-          portunosPelagicusCount +
-          zosimusAeneusCount;
+      charybdisFeriatusCount = counts['Charybdis Feriatus'] ?? 0;
+      scyllaOlivaceaCount = counts['Scylla Olivacea'] ?? 0;
+      scyllaParamamosainCount = counts['Scylla Paramamosain'] ?? 0;
+      portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
+      zosimusAeneusCount = counts['Zosimus Aeneus'] ?? 0;
+      totalCount = counts.values.fold(0, (a, b) => a + b);
     });
   }
 
-// query of getting count data from the database
-  Future<int> fetchCount(String species) async {
-    final crabRef = db.collection('crabData');
-    final query = crabRef.where('species', isEqualTo: species);
-    final snapshot = await query.count().get();
-    return snapshot.count!;
+  Future<void> fetchCrabData() async {
+    final documents = await firestoreService.fetchCrabData();
+    processCrabData(documents);
+  }
+
+  void processCrabData(List<QueryDocumentSnapshot> documents) {
+    resetMonthlyCounts();
+
+    for (var doc in documents) {
+      DateTime dateTime = (doc['timestamp'] as Timestamp).toDate();
+      int monthIndex = dateTime.month - 1; // Convert month to 0-based index
+
+      String species = doc['species'];
+      incrementSpeciesCount(species, monthIndex);
+      totalCrabs[monthIndex]++;
+    }
+
+    setState(() {});
+  }
+
+  void resetMonthlyCounts() {
+    totalCrabs.fillRange(0, 12, 0);
+    charybdisFeriatus.fillRange(0, 12, 0);
+    scyllaOlivacea.fillRange(0, 12, 0);
+    scyllaParamamosain.fillRange(0, 12, 0);
+    portunosPelagicus.fillRange(0, 12, 0);
+    zosimusAeneus.fillRange(0, 12, 0);
+  }
+
+  void incrementSpeciesCount(String species, int monthIndex) {
+    switch (species) {
+      case 'Charybdis Feriatus':
+        charybdisFeriatus[monthIndex]++;
+        break;
+      case 'Scylla Olivacea':
+        scyllaOlivacea[monthIndex]++;
+        break;
+      case 'Scylla Paramamosain':
+        scyllaParamamosain[monthIndex]++;
+        break;
+      case 'Portunos Pelagicus':
+        portunosPelagicus[monthIndex]++;
+        break;
+      case 'Zosimus Aeneus':
+        zosimusAeneus[monthIndex]++;
+        break;
+    }
+  }
+
+// Restart the dashboard state
+  void restart() {
+    setState(() => isLoading = true);
+    fetchAllCounts();
+    fetchCrabData();
   }
 
   @override
@@ -83,45 +130,33 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     late List<double> graphData;
     late String graphTitle;
 
-    // Determine what graphTitle to put on the variable graphTitle
-    if (activeTitle.contains('Charybdis Feriatus')) {
-      graphTitle = 'Charybdis Feriatus';
-    } else if (activeTitle.contains('Scylla Olivacea')) {
-      graphTitle = 'Scylla Olivacea';
-    } else if (activeTitle.contains('Scylla Paramamosain')) {
-      graphTitle = 'Scylla Paramamosain';
-    } else if (activeTitle.contains('Portunos Pelagicus')) {
-      graphTitle = 'Portunos Pelagicus';
-    } else if (activeTitle.contains('Zosimus Aeneus')) {
-      graphTitle = 'Zosimus Aeneus';
-    } else if (activeTitle.contains('Total Crabs')) {
-      graphTitle = 'Total Crabs';
-    } else {
-      graphTitle = 'Total Crabs';
+    void updateGraphData() {
+      // Determine which data to display based on the selected title
+      if (activeTitle.contains('Charybdis Feriatus')) {
+        graphTitle = 'Charybdis Feriatus';
+        graphData = charybdisFeriatus;
+      } else if (activeTitle.contains('Scylla Olivacea')) {
+        graphTitle = 'Scylla Olivacea';
+        graphData = scyllaOlivacea;
+      } else if (activeTitle.contains('Scylla Paramamosain')) {
+        graphTitle = 'Scylla Paramamosain';
+        graphData = scyllaParamamosain;
+      } else if (activeTitle.contains('Portunos Pelagicus')) {
+        graphTitle = 'Portunos Pelagicus';
+        graphData = portunosPelagicus;
+      } else if (activeTitle.contains('Zosimus Aeneus')) {
+        graphTitle = 'Zosimus Aeneus';
+        graphData = zosimusAeneus;
+      } else {
+        // Default to Total Crabs
+        graphTitle = 'Total Crabs';
+        graphData = totalCrabs;
+      }
+
+      setState(() {});
     }
 
-    // Assign graph data based on the graphTitle
-    switch (graphTitle) {
-      case 'Charybdis Feriatus':
-        graphData = scyllaSerrata;
-        break;
-      case 'Scylla Olivacea':
-        graphData = scyllaOlivacea;
-        break;
-      case 'Scylla Paramamosain':
-        graphData = scyllaParamamosain;
-        break;
-      case 'Portunos Pelagicus':
-        graphData = portunosPelagicus;
-        break;
-      case 'Zosimus Aeneus':
-        graphData = zosimusAeneus;
-        break;
-      case 'Total Crabs':
-        graphData = totalCrabs;
-        break;
-      default:
-    }
+    updateGraphData();
 
 //* DASHBOARD
     return Column(
@@ -146,7 +181,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           children: [
             InfoCard(
               title: "Charybdis Feriatus",
-              value: scyllaSerrataCount.toString(),
+              value: charybdisFeriatusCount.toString(),
               topColor: Colors.brown,
               isActive: activeTitle == "Charybdis Feriatus",
               onTap: () {
@@ -250,8 +285,8 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: BarGraph(
-                  totalCrabs: graphData,
-                  activeTitle: activeTitle,
+                  totalCrabs: graphData, // Pass the dynamically selected data
+                  activeTitle: graphTitle,
                 ),
               ),
             ),
@@ -271,7 +306,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: PieChartDisplay(
                     scyllaOlivaceaCount: scyllaOlivaceaCount,
-                    scyllaSerrataCount: scyllaSerrataCount,
+                    scyllaSerrataCount: charybdisFeriatusCount,
                     scyllaParamamosainCount: scyllaParamamosainCount,
                     portunosPelagicusCount: portunosPelagicusCount,
                     zosimusAeneusCount: zosimusAeneusCount,

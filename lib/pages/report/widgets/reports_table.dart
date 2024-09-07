@@ -3,9 +3,14 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ReportsTable extends StatelessWidget {
+class ReportsTable extends StatefulWidget {
   const ReportsTable({super.key});
 
+  @override
+  State<ReportsTable> createState() => _ReportsTableState();
+}
+
+class _ReportsTableState extends State<ReportsTable> {
   @override
   Widget build(BuildContext context) {
     return Column(

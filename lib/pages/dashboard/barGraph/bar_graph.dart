@@ -10,8 +10,8 @@ class BarGraph extends StatelessWidget {
 
   const BarGraph({
     super.key,
-    required this.totalCrabs,
     required this.activeTitle,
+    required this.totalCrabs,
   });
 
   @override
