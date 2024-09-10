@@ -28,7 +28,7 @@ class FirestoreService {
         .where('species', isEqualTo: species)
         .get();
 
-    return snapshot.docs.length; // Assuming each document represents a crab
+    return snapshot.docs.length;
   }
 
   // Fetch crab data

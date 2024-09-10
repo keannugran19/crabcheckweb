@@ -276,6 +276,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
         Column(
           children: [
+            // * BAR GRAPH CONTAINER
             Container(
               height: 400,
               decoration: BoxDecoration(

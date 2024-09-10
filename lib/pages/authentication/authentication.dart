@@ -199,19 +199,19 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               fullscreenDialog: true,
-                              builder: (context) => const LoadingScreen(),
+                              builder: (context) => HomePage(),
                             ),
                           );
 
                           // Wait for a short duration to show the animation, then navigate to HomePage
-                          Future.delayed(const Duration(seconds: 3), () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                fullscreenDialog: true,
-                                builder: (context) => HomePage(),
-                              ),
-                            );
-                          });
+                          // Future.delayed(const Duration(seconds: 3), () {
+                          //   Navigator.of(context).pushReplacement(
+                          //     MaterialPageRoute(
+                          //       fullscreenDialog: true,
+                          //       builder: (context) => HomePage(),
+                          //     ),
+                          //   );
+                          // });
 
                           setState(() {
                             loginStatus = 'You have successfully logged in';
