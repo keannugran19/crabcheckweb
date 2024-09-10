@@ -21,17 +21,17 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 // Monthly counts for each species
   List<double> totalCrabs = List<double>.filled(12, 0);
   List<double> charybdisFeriatus = List<double>.filled(12, 0);
-  List<double> scyllaOlivacea = List<double>.filled(12, 0);
-  List<double> scyllaParamamosain = List<double>.filled(12, 0);
+  List<double> scyllaSerrata = List<double>.filled(12, 0);
+  List<double> venitusLatreillei = List<double>.filled(12, 0);
   List<double> portunosPelagicus = List<double>.filled(12, 0);
-  List<double> zosimusAeneus = List<double>.filled(12, 0);
+  List<double> metopograpsusSpp = List<double>.filled(12, 0);
 
 // Total counts for each species
   int charybdisFeriatusCount = 0;
-  int scyllaOlivaceaCount = 0;
-  int scyllaParamamosainCount = 0;
+  int scyllaSerrataCount = 0;
+  int venitusLatreilleiCount = 0;
   int portunosPelagicusCount = 0;
-  int zosimusAeneusCount = 0;
+  int metopograpsusSppCount = 0;
   int totalCount = 0;
 
   bool isLoading = true;
@@ -47,10 +47,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   Future<void> fetchAllCounts() async {
     Map<String, Future<int>> countFutures = {
       'Charybdis Feriatus': firestoreService.fetchCount('Charybdis Feriatus'),
-      'Scylla Olivacea': firestoreService.fetchCount('Scylla Olivacea'),
-      'Scylla Paramamosain': firestoreService.fetchCount('Scylla Paramamosain'),
+      'Scylla Serrata': firestoreService.fetchCount('Scylla Serrata'),
+      'Venitus Latreillei': firestoreService.fetchCount('Venitus Latreillei'),
       'Portunos Pelagicus': firestoreService.fetchCount('Portunos Pelagicus'),
-      'Zosimus Aeneus': firestoreService.fetchCount('Zosimus Aeneus'),
+      'Metopograpsus Spp': firestoreService.fetchCount('Metopograpsus Spp'),
     };
 
     Map<String, int> counts = {
@@ -59,10 +59,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     setState(() {
       charybdisFeriatusCount = counts['Charybdis Feriatus'] ?? 0;
-      scyllaOlivaceaCount = counts['Scylla Olivacea'] ?? 0;
-      scyllaParamamosainCount = counts['Scylla Paramamosain'] ?? 0;
+      scyllaSerrataCount = counts['Scylla Serrata'] ?? 0;
+      venitusLatreilleiCount = counts['Venitus Latreillei'] ?? 0;
       portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
-      zosimusAeneusCount = counts['Zosimus Aeneus'] ?? 0;
+      metopograpsusSppCount = counts['Metopograpsus Spp'] ?? 0;
       totalCount = counts.values.fold(0, (a, b) => a + b);
     });
   }
@@ -90,10 +90,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   void resetMonthlyCounts() {
     totalCrabs.fillRange(0, 12, 0);
     charybdisFeriatus.fillRange(0, 12, 0);
-    scyllaOlivacea.fillRange(0, 12, 0);
-    scyllaParamamosain.fillRange(0, 12, 0);
+    scyllaSerrata.fillRange(0, 12, 0);
+    venitusLatreillei.fillRange(0, 12, 0);
     portunosPelagicus.fillRange(0, 12, 0);
-    zosimusAeneus.fillRange(0, 12, 0);
+    metopograpsusSpp.fillRange(0, 12, 0);
   }
 
   void incrementSpeciesCount(String species, int monthIndex) {
@@ -101,17 +101,17 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       case 'Charybdis Feriatus':
         charybdisFeriatus[monthIndex]++;
         break;
-      case 'Scylla Olivacea':
-        scyllaOlivacea[monthIndex]++;
+      case 'Scylla Serrata':
+        scyllaSerrata[monthIndex]++;
         break;
-      case 'Scylla Paramamosain':
-        scyllaParamamosain[monthIndex]++;
+      case 'Venitus Latreillei':
+        venitusLatreillei[monthIndex]++;
         break;
       case 'Portunos Pelagicus':
         portunosPelagicus[monthIndex]++;
         break;
-      case 'Zosimus Aeneus':
-        zosimusAeneus[monthIndex]++;
+      case 'Metopograpsus Spp':
+        metopograpsusSpp[monthIndex]++;
         break;
     }
   }
@@ -135,18 +135,18 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       if (activeTitle.contains('Charybdis Feriatus')) {
         graphTitle = 'Charybdis Feriatus';
         graphData = charybdisFeriatus;
-      } else if (activeTitle.contains('Scylla Olivacea')) {
-        graphTitle = 'Scylla Olivacea';
-        graphData = scyllaOlivacea;
-      } else if (activeTitle.contains('Scylla Paramamosain')) {
-        graphTitle = 'Scylla Paramamosain';
-        graphData = scyllaParamamosain;
+      } else if (activeTitle.contains('Scylla Serrata')) {
+        graphTitle = 'Scylla Serrata';
+        graphData = scyllaSerrata;
+      } else if (activeTitle.contains('Venitus Latreillei')) {
+        graphTitle = 'Venitus Latreillei';
+        graphData = venitusLatreillei;
       } else if (activeTitle.contains('Portunos Pelagicus')) {
         graphTitle = 'Portunos Pelagicus';
         graphData = portunosPelagicus;
-      } else if (activeTitle.contains('Zosimus Aeneus')) {
-        graphTitle = 'Zosimus Aeneus';
-        graphData = zosimusAeneus;
+      } else if (activeTitle.contains('Metopograpsus Spp')) {
+        graphTitle = 'Metopograpsus Spp';
+        graphData = metopograpsusSpp;
       } else {
         // Default to Total Crabs
         graphTitle = 'Total Crabs';
@@ -182,7 +182,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             InfoCard(
               title: "Charybdis Feriatus",
               value: charybdisFeriatusCount.toString(),
-              topColor: Colors.brown,
+              topColor: Colors.orange,
               isActive: activeTitle == "Charybdis Feriatus",
               onTap: () {
                 setState(() {
@@ -194,13 +194,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               width: width / 64,
             ),
             InfoCard(
-              title: "Scylla Olivacea",
-              value: scyllaOlivaceaCount.toString(),
-              topColor: Colors.orange,
-              isActive: activeTitle == "Scylla Olivacea",
+              title: "Scylla Serrata",
+              value: scyllaSerrataCount.toString(),
+              topColor: Colors.brown,
+              isActive: activeTitle == "Scylla Serrata",
               onTap: () {
                 setState(() {
-                  activeTitle = "Scylla Olivacea";
+                  activeTitle = "Scylla Serrata";
                 });
               },
             ),
@@ -208,13 +208,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               width: width / 64,
             ),
             InfoCard(
-              title: "Scylla Paramamosain",
-              value: scyllaParamamosainCount.toString(),
-              topColor: Colors.green,
-              isActive: activeTitle == "Scylla Paramamosain",
+              title: "Venitus Latreillei",
+              value: venitusLatreilleiCount.toString(),
+              topColor: Colors.yellow,
+              isActive: activeTitle == "Venitus Latreillei",
               onTap: () {
                 setState(() {
-                  activeTitle = "Scylla Paramamosain";
+                  activeTitle = "Venitus Latreillei";
                 });
               },
             ),
@@ -243,13 +243,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               width: width / 64,
             ),
             InfoCard(
-              title: "Zosimus Aeneus",
-              value: zosimusAeneusCount.toString(),
+              title: "Metopograpsus Spp",
+              value: metopograpsusSppCount.toString(),
               topColor: Colors.purple,
-              isActive: activeTitle == "Zosimus Aeneus",
+              isActive: activeTitle == "Metopograpsus Spp",
               onTap: () {
                 setState(() {
-                  activeTitle = "Zosimus Aeneus";
+                  activeTitle = "Metopograpsus Spp";
                 });
               },
             ),
@@ -306,11 +306,11 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: PieChartDisplay(
-                    scyllaOlivaceaCount: scyllaOlivaceaCount,
-                    scyllaSerrataCount: charybdisFeriatusCount,
-                    scyllaParamamosainCount: scyllaParamamosainCount,
+                    charybdisFeriatusCount: charybdisFeriatusCount,
+                    scyllaSerrataCount: scyllaSerrataCount,
+                    venitusLatreilleiCount: venitusLatreilleiCount,
                     portunosPelagicusCount: portunosPelagicusCount,
-                    zosimusAeneusCount: zosimusAeneusCount,
+                    metopograpsusSppCount: metopograpsusSppCount,
                   ),
                 ),
               ),

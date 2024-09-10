@@ -22,22 +22,22 @@ class BarGraph extends StatelessWidget {
 
     switch (activeTitle) {
       case 'Charybdis Feriatus':
-        rodColor = Colors.brown;
-        rodColorUnfilled = Colors.brown[200];
-        break;
-      case 'Scylla Olivacea':
         rodColor = Colors.orange;
         rodColorUnfilled = Colors.orange[200];
         break;
-      case 'Scylla Paramamosain':
-        rodColor = Colors.green;
-        rodColorUnfilled = Colors.green[200];
+      case 'Scylla Serrata':
+        rodColor = Colors.brown;
+        rodColorUnfilled = Colors.brown[200];
+        break;
+      case 'Venitus Latreillei':
+        rodColor = Colors.yellow;
+        rodColorUnfilled = Colors.yellow[200];
         break;
       case 'Portunos Pelagicus':
         rodColor = Colors.blue;
         rodColorUnfilled = Colors.blue[200];
         break;
-      case 'Zosimus Aeneus':
+      case 'Metopograpsus Spp':
         rodColor = Colors.purple;
         rodColorUnfilled = Colors.purple[200];
         break;

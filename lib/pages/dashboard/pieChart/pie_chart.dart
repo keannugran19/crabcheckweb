@@ -3,19 +3,19 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PieChartDisplay extends StatefulWidget {
+  final int charybdisFeriatusCount;
   final int scyllaSerrataCount;
-  final int scyllaOlivaceaCount;
-  final int scyllaParamamosainCount;
+  final int venitusLatreilleiCount;
   final int portunosPelagicusCount;
-  final int zosimusAeneusCount;
+  final int metopograpsusSppCount;
 
   const PieChartDisplay({
     super.key,
+    required this.charybdisFeriatusCount,
     required this.scyllaSerrataCount,
-    required this.scyllaOlivaceaCount,
-    required this.scyllaParamamosainCount,
+    required this.venitusLatreilleiCount,
     required this.portunosPelagicusCount,
-    required this.zosimusAeneusCount,
+    required this.metopograpsusSppCount,
   });
 
   @override
@@ -63,6 +63,14 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Indicator(
+              color: Colors.orange,
+              text: 'Charybdis Feriatus',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
               color: Colors.brown,
               text: 'Scylla Serrata',
               isSquare: true,
@@ -71,16 +79,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               height: 4,
             ),
             Indicator(
-              color: Colors.orange,
-              text: 'Scylla Olivacea',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Colors.green,
-              text: 'Scylla Paramamosain',
+              color: Colors.yellow,
+              text: 'Venitus Latreillei',
               isSquare: true,
             ),
             SizedBox(
@@ -96,7 +96,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
             ),
             Indicator(
               color: Colors.purple,
-              text: 'Zosimus Aeneus',
+              text: 'Metopograpsus Spp',
               isSquare: true,
             ),
             SizedBox(
@@ -121,8 +121,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         case 0:
           return PieChartSectionData(
             color: Colors.brown,
-            value: widget.scyllaSerrataCount.toDouble(),
-            title: widget.scyllaSerrataCount.toString(),
+            value: widget.charybdisFeriatusCount.toDouble(),
+            title: widget.charybdisFeriatusCount.toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -134,8 +134,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         case 1:
           return PieChartSectionData(
             color: Colors.orange,
-            value: widget.scyllaOlivaceaCount.toDouble(),
-            title: widget.scyllaOlivaceaCount.toString(),
+            value: widget.scyllaSerrataCount.toDouble(),
+            title: widget.scyllaSerrataCount.toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -147,8 +147,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         case 2:
           return PieChartSectionData(
             color: Colors.green,
-            value: widget.scyllaParamamosainCount.toDouble(),
-            title: widget.scyllaParamamosainCount.toString(),
+            value: widget.venitusLatreilleiCount.toDouble(),
+            title: widget.venitusLatreilleiCount.toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -173,8 +173,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         case 4:
           return PieChartSectionData(
             color: Colors.purple,
-            value: widget.zosimusAeneusCount.toDouble(),
-            title: widget.zosimusAeneusCount.toString(),
+            value: widget.metopograpsusSppCount.toDouble(),
+            title: widget.metopograpsusSppCount.toString(),
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
