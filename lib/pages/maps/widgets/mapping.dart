@@ -26,24 +26,35 @@ class CrabMapWidget extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  late String pinColor;
-
-                  final species =
-                      firestoreService.crabs.doc('species').toString();
-
-                  switch (species) {
-                    case 'Charybdis Feriatus':
-                      pinColor = "lib/assets/images/crab_brown_loc.png";
-                      break;
-                    default:
-                      pinColor = "lib/assets/images/crab_brown_loc.png";
-                  }
-
                   final markers = snapshot.data!.docs
                       .map((doc) {
                         final data = doc.data() as Map<String, dynamic>;
-                        if (data['location'] is GeoPoint) {
+                        if (data['location'] is GeoPoint &&
+                            data['species'] is String) {
                           final geoPoint = data['location'] as GeoPoint;
+                          final species = data['species'];
+
+                          late String pinColor;
+
+                          switch (species) {
+                            case 'Charybdis Feriatus':
+                              pinColor = "lib/assets/images/orange.png";
+                              break;
+                            case 'Venitus Latreillei':
+                              pinColor = "lib/assets/images/yellow.png";
+                              break;
+                            case 'Scylla Serrata':
+                              pinColor = "lib/assets/images/brown.png";
+                              break;
+                            case 'Portunos Pelagicus':
+                              pinColor = "lib/assets/images/darkgray.png";
+                              break;
+                            case 'Metopograpsus Spp':
+                              pinColor = "lib/assets/images/purple.png";
+                              break;
+                            default:
+                          }
+
                           return Marker(
                             point:
                                 LatLng(geoPoint.latitude, geoPoint.longitude),

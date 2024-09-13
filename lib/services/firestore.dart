@@ -10,8 +10,7 @@ class FirestoreService {
 
   // query of getting count data from the database
   Future<int> fetchCount(String species) async {
-    final crabRef = db.collection('crabData');
-    final query = crabRef.where('species', isEqualTo: species);
+    final query = crabs.where('species', isEqualTo: species);
     final snapshot = await query.count().get();
     return snapshot.count!;
   }
@@ -33,7 +32,7 @@ class FirestoreService {
 
   // Fetch crab data
   Future<List<QueryDocumentSnapshot>> fetchCrabData() async {
-    QuerySnapshot snapshot = await db.collection('crabData').get();
+    QuerySnapshot snapshot = await crabs.get();
     return snapshot.docs;
   }
 }
