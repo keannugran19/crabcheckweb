@@ -9,6 +9,68 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CrabMapWidget extends StatelessWidget {
   const CrabMapWidget({super.key});
 
+  // Define species pin mappings as constants or an enum
+  static const Map<String, String> speciesPinMap = {
+    'Charybdis Feriatus': "lib/assets/images/orange.png",
+    'Venitus Latreillei': "lib/assets/images/yellow.png",
+    'Scylla Serrata': "lib/assets/images/brown.png",
+    'Portunos Pelagicus': "lib/assets/images/darkgray.png",
+    'Metopograpsus Spp': "lib/assets/images/purple.png",
+  };
+
+  // Function to build markers
+  List<Marker> _buildMarkers(List<QueryDocumentSnapshot> docs) {
+    return docs
+        .map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          if (data['location'] is GeoPoint &&
+              data['species'] is String &&
+              data['timestamp'] is Timestamp) {
+            // Check for Timestamp type
+            final geoPoint = data['location'] as GeoPoint;
+            final species = data['species'];
+            final timestamp =
+                data['timestamp'] as Timestamp; // Convert to Timestamp
+            final pinImage = speciesPinMap[species];
+
+            if (pinImage != null) {
+              // Convert Timestamp to DateTime
+              final dateTime = timestamp.toDate();
+
+              // Format date and time
+              final formattedDate =
+                  "${dateTime.month}-${dateTime.day.toString().padLeft(2, '0')}-${dateTime.year.toString().padLeft(2, '0')}";
+              final formattedTime =
+                  "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+              final formattedDateTime = "$formattedDate $formattedTime";
+
+              return Marker(
+                point: LatLng(geoPoint.latitude, geoPoint.longitude),
+                width: 100,
+                height: 100,
+                child: Tooltip(
+                  message: formattedDateTime,
+                  verticalOffset: 20,
+                  preferBelow: false,
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Image.asset(pinImage),
+                ),
+              );
+            }
+          }
+          return null;
+        })
+        .whereType<Marker>()
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirestoreService firestoreService = FirestoreService();
@@ -18,6 +80,7 @@ class CrabMapWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(0, 60, 0, 20),
         child: Row(
           children: [
+            // Expanded map view
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestoreService.crabs.snapshots(),
@@ -26,49 +89,7 @@ class CrabMapWidget extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  final markers = snapshot.data!.docs
-                      .map((doc) {
-                        final data = doc.data() as Map<String, dynamic>;
-                        if (data['location'] is GeoPoint &&
-                            data['species'] is String) {
-                          final geoPoint = data['location'] as GeoPoint;
-                          final species = data['species'];
-
-                          late String pinColor;
-
-                          switch (species) {
-                            case 'Charybdis Feriatus':
-                              pinColor = "lib/assets/images/orange.png";
-                              break;
-                            case 'Venitus Latreillei':
-                              pinColor = "lib/assets/images/yellow.png";
-                              break;
-                            case 'Scylla Serrata':
-                              pinColor = "lib/assets/images/brown.png";
-                              break;
-                            case 'Portunos Pelagicus':
-                              pinColor = "lib/assets/images/darkgray.png";
-                              break;
-                            case 'Metopograpsus Spp':
-                              pinColor = "lib/assets/images/purple.png";
-                              break;
-                            default:
-                          }
-
-                          return Marker(
-                            point:
-                                LatLng(geoPoint.latitude, geoPoint.longitude),
-                            width: 100,
-                            height: 100,
-                            child: InkWell(
-                              child: Image.asset(pinColor),
-                            ),
-                          );
-                        }
-                        return null;
-                      })
-                      .whereType<Marker>()
-                      .toList();
+                  final markers = _buildMarkers(snapshot.data!.docs);
 
                   return FlutterMap(
                     options: const MapOptions(
@@ -89,64 +110,93 @@ class CrabMapWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 20),
-            Column(
-              children: [
-                Text(
-                  "Crab Mapping",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
+            // Enhanced Legend UI
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    spreadRadius: 2,
                   ),
-                ),
-                const SizedBox(height: 16),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Indicator(
-                      color: Colors.orange,
-                      text: 'Charybdis Feriatus',
-                      isSquare: true,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Crab Mapping",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.brown,
-                      text: 'Scylla Serrata',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.yellow,
-                      text: 'Venitus Latreillei',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.blue,
-                      text: 'Portunos Pelagicus',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Indicator(
-                      color: Colors.purple,
-                      text: 'Metopograpsus Spp',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 18,
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Edible Section
+                      Text(
+                        'Edible:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Indicator(
+                        color: Colors.orange,
+                        text: 'Charybdis Feriatus',
+                        isSquare: true,
+                      ),
+                      SizedBox(height: 4),
+                      Indicator(
+                        color: Colors.brown,
+                        text: 'Scylla Serrata',
+                        isSquare: true,
+                      ),
+                      SizedBox(height: 4),
+                      Indicator(
+                        color: Colors.blue,
+                        text: 'Portunos Pelagicus',
+                        isSquare: true,
+                      ),
+
+                      SizedBox(
+                          height:
+                              16), // Space between edible and inedible sections
+
+                      // Inedible Section
+                      Text(
+                        'Inedible:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Indicator(
+                        color: Colors.yellow,
+                        text: 'Venitus Latreillei',
+                        isSquare: true,
+                      ),
+                      SizedBox(height: 4),
+                      Indicator(
+                        color: Colors.purple,
+                        text: 'Metopograpsus Spp',
+                        isSquare: true,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
             const SizedBox(width: 28),
           ],
