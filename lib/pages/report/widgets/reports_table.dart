@@ -125,7 +125,40 @@ class _ReportsTableState extends State<ReportsTable> {
         DataCell(Center(
           child: IconButton(
             onPressed: () async {
-              await firestoreService.crabs.doc(doc.id).delete();
+              // Show a confirmation dialog before deleting
+              bool confirmDelete = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm Deletion'),
+                    content: const Text(
+                        'Are you sure you want to delete this data?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (confirmDelete == true) {
+                try {
+                  await firestoreService.crabs.doc(doc.id).delete();
+                  print('Document deleted successfully');
+                } catch (e) {
+                  print('Failed to delete document: $e');
+                }
+              }
             },
             icon: const Icon(Icons.delete),
             tooltip: 'Delete',
