@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crabcheckweb1/services/firestore.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,8 @@ class ReportsTable extends StatefulWidget {
 }
 
 class _ReportsTableState extends State<ReportsTable> {
+  final FirestoreService firestoreService = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,7 +39,6 @@ class _ReportsTableState extends State<ReportsTable> {
               return DataTable2(
                 columnSpacing: 20,
                 horizontalMargin: 12,
-                minWidth: 600,
                 headingRowColor: WidgetStateProperty.all(
                   Colors.grey.withOpacity(0.1),
                 ),
@@ -46,6 +48,7 @@ class _ReportsTableState extends State<ReportsTable> {
                 ),
                 columns: const [
                   DataColumn2(
+                    size: ColumnSize.M,
                     label: Text(
                       "Species",
                       style: TextStyle(
@@ -54,7 +57,8 @@ class _ReportsTableState extends State<ReportsTable> {
                       ),
                     ),
                   ),
-                  DataColumn(
+                  DataColumn2(
+                    size: ColumnSize.S,
                     label: Text(
                       'Edibility',
                       style: TextStyle(
@@ -63,7 +67,8 @@ class _ReportsTableState extends State<ReportsTable> {
                       ),
                     ),
                   ),
-                  DataColumn(
+                  DataColumn2(
+                    size: ColumnSize.L,
                     label: Text(
                       'Location (Latitude & Longitude)',
                       style: TextStyle(
@@ -72,7 +77,8 @@ class _ReportsTableState extends State<ReportsTable> {
                       ),
                     ),
                   ),
-                  DataColumn(
+                  DataColumn2(
+                    size: ColumnSize.L,
                     label: Text(
                       'Date & Time',
                       style: TextStyle(
@@ -80,6 +86,10 @@ class _ReportsTableState extends State<ReportsTable> {
                         color: Colors.black54,
                       ),
                     ),
+                  ),
+                  DataColumn2(
+                    size: ColumnSize.S,
+                    label: Text(''),
                   ),
                 ],
                 rows: rows,
@@ -112,6 +122,15 @@ class _ReportsTableState extends State<ReportsTable> {
         DataCell(Text(edibility, style: _cellTextStyle)),
         DataCell(Text(locationText, style: _cellTextStyle)),
         DataCell(Text(dateTimeText, style: _cellTextStyle)),
+        DataCell(Center(
+          child: IconButton(
+            onPressed: () async {
+              await firestoreService.crabs.doc(doc.id).delete();
+            },
+            icon: const Icon(Icons.delete),
+            tooltip: 'Delete',
+          ),
+        ))
       ]);
     }).toList();
   }
