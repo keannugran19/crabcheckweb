@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CrabMapWidget extends StatelessWidget {
   const CrabMapWidget({super.key});
 
-  // Define species pin mappings as constants or an enum
+  // Define species pin color
   static const Map<String, String> speciesPinMap = {
     'Charybdis Feriatus': "lib/assets/images/orange.png",
     'Venitus Latreillei': "lib/assets/images/yellow.png",
@@ -29,8 +29,7 @@ class CrabMapWidget extends StatelessWidget {
             // Check for Timestamp type
             final geoPoint = data['location'] as GeoPoint;
             final species = data['species'];
-            final timestamp =
-                data['timestamp'] as Timestamp; // Convert to Timestamp
+            final timestamp = data['timestamp'] as Timestamp;
             final pinImage = speciesPinMap[species];
 
             if (pinImage != null) {
@@ -80,7 +79,7 @@ class CrabMapWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(0, 60, 0, 20),
         child: Row(
           children: [
-            // Expanded map view
+            // map view
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestoreService.crabs.snapshots(),
@@ -168,9 +167,7 @@ class CrabMapWidget extends StatelessWidget {
                         isSquare: true,
                       ),
 
-                      SizedBox(
-                          height:
-                              16), // Space between edible and inedible sections
+                      SizedBox(height: 16),
 
                       // Inedible Section
                       Text(
@@ -198,7 +195,7 @@ class CrabMapWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 28),
+            const SizedBox(width: 20),
           ],
         ),
       ),
