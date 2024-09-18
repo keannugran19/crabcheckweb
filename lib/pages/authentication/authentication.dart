@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 import 'package:crabcheckweb1/constants/colors.dart';
-import 'package:crabcheckweb1/constants/loading_screen.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
 import 'package:flutter/material.dart';

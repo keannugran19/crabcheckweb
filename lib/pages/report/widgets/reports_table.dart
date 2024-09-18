@@ -152,12 +152,7 @@ class _ReportsTableState extends State<ReportsTable> {
               );
 
               if (confirmDelete == true) {
-                try {
-                  await firestoreService.crabs.doc(doc.id).delete();
-                  print('Document deleted successfully');
-                } catch (e) {
-                  print('Failed to delete document: $e');
-                }
+                await firestoreService.crabs.doc(doc.id).delete();
               }
             },
             icon: const Icon(Icons.delete),
