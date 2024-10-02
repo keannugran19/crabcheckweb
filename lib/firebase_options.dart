@@ -52,7 +52,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '819593173831',
     projectId: 'crabcheck-c8aea',
     authDomain: 'crabcheck-c8aea.firebaseapp.com',
-    databaseURL: 'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crabcheck-c8aea.appspot.com',
     measurementId: 'G-T0JLWL3VV2',
   );
@@ -62,7 +63,8 @@ class DefaultFirebaseOptions {
     appId: '1:819593173831:android:f9f6c7bd90b67adf514a62',
     messagingSenderId: '819593173831',
     projectId: 'crabcheck-c8aea',
-    databaseURL: 'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crabcheck-c8aea.appspot.com',
   );
 
@@ -71,7 +73,8 @@ class DefaultFirebaseOptions {
     appId: '1:819593173831:ios:84d96e071926d9eb514a62',
     messagingSenderId: '819593173831',
     projectId: 'crabcheck-c8aea',
-    databaseURL: 'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://crabcheck-c8aea-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'crabcheck-c8aea.appspot.com',
     iosBundleId: 'com.example.crabcheckweb1',
   );

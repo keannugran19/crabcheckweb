@@ -276,45 +276,39 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
         Column(
           children: [
-            // * BAR GRAPH CONTAINER
+            // Bar Graph Container
             Container(
               height: 400,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: BarGraph(
-                  totalCrabs: graphData, // Pass the dynamically selected data
-                  activeTitle: graphTitle,
-                ),
+              padding: const EdgeInsets.all(20.0),
+              child: BarGraph(
+                totalCrabs: graphData, // Pass the dynamically selected data
+                activeTitle: graphTitle,
               ),
             ),
 
             const SizedBox(height: 20),
 
-            //* PIE CHART CONTAINER
-            SizedBox(
+            // Pie Chart Container
+            Container(
               height: 400,
-              width: width,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: PieChartDisplay(
-                    charybdisFeriatusCount: charybdisFeriatusCount,
-                    scyllaSerrataCount: scyllaSerrataCount,
-                    venitusLatreilleiCount: venitusLatreilleiCount,
-                    portunosPelagicusCount: portunosPelagicusCount,
-                    metopograpsusSppCount: metopograpsusSppCount,
-                  ),
-                ),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10),
               ),
-            )
+              padding: const EdgeInsets.all(20.0),
+              child: PieChartDisplay(
+                charybdisFeriatusCount: charybdisFeriatusCount,
+                scyllaSerrataCount: scyllaSerrataCount,
+                venitusLatreilleiCount: venitusLatreilleiCount,
+                portunosPelagicusCount: portunosPelagicusCount,
+                metopograpsusSppCount: metopograpsusSppCount,
+              ),
+            ),
           ],
         ),
 
