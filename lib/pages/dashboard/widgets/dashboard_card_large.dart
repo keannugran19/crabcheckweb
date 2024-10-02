@@ -35,7 +35,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   int totalCount = 0;
 
   bool isLoading = true;
-  String activeTitle = '';
+  String activeTitle = "Total Crabs";
 
   @override
   void initState() {
@@ -152,8 +152,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         graphTitle = 'Total Crabs';
         graphData = totalCrabs;
       }
-
-      setState(() {});
     }
 
     updateGraphData();

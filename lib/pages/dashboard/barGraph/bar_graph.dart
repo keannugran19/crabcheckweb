@@ -69,7 +69,7 @@ class BarGraph extends StatelessWidget {
 
     return BarChart(
       BarChartData(
-        maxY: 150,
+        maxY: 50,
         minY: 0,
         gridData: const FlGridData(show: false), // Remove grid
         borderData: FlBorderData(
@@ -103,7 +103,7 @@ class BarGraph extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,
-                  toY: 150,
+                  toY: 50,
                   color: rodColorUnfilled,
                 ),
               ),
