@@ -175,83 +175,84 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                   Text(_errorMessage!,
                       style: const TextStyle(color: Colors.red)),
                 const SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
-                InkWell(
-                  onTap: () async {
-                    setState(() {
-                      _isLogginIn = true;
-                      textFocusNodeEmail.unfocus();
-                      textFocusNodePassword.unfocus();
-                    });
 
-                    if (_validateEmail(textControllerEmail.text) == null &&
-                        _validatePassword(textControllerPassword.text) ==
-                            null) {
-                      await signInWithEmailPassword(textControllerEmail.text,
-                              textControllerPassword.text)
-                          .then((result) {
-                        if (result != null) {
-                          devtools.log(result.toString());
+                //* Login Button
+                Container(
+                  alignment: Alignment.center,
+                  child: Material(
+                    color: colorScheme.primary,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () async {
+                        setState(() {
+                          _isLogginIn = true;
+                          textFocusNodeEmail.unfocus();
+                          textFocusNodePassword.unfocus();
+                        });
 
-                          // Navigate to the animation screen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (context) => HomePage(),
-                            ),
-                          );
+                        if (_validateEmail(textControllerEmail.text) == null &&
+                            _validatePassword(textControllerPassword.text) ==
+                                null) {
+                          await signInWithEmailPassword(
+                                  textControllerEmail.text,
+                                  textControllerPassword.text)
+                              .then((result) {
+                            if (result != null) {
+                              devtools.log(result.toString());
 
-                          // Wait for a short duration to show the animation, then navigate to HomePage
-                          // Future.delayed(const Duration(seconds: 3), () {
-                          //   Navigator.of(context).pushReplacement(
-                          //     MaterialPageRoute(
-                          //       fullscreenDialog: true,
-                          //       builder: (context) => HomePage(),
-                          //     ),
-                          //   );
-                          // });
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => HomePage(),
+                                ),
+                              );
 
-                          setState(() {
-                            loginStatus = 'You have successfully logged in';
-                            _errorMessage = null;
+                              setState(() {
+                                loginStatus = 'You have successfully logged in';
+                                _errorMessage = null;
+                              });
+                            } else {
+                              setState(() {
+                                _errorMessage = 'Incorrect email or password';
+                              });
+                            }
+                          }).catchError((error) {
+                            devtools.log('Login Error: $error');
+                            setState(() {
+                              loginStatus = 'Error occurred while logging in';
+                            });
                           });
                         } else {
                           setState(() {
-                            _errorMessage = 'Incorrect email or password';
+                            loginStatus = 'Please enter email & password';
                           });
                         }
-                      }).catchError((error) {
-                        devtools.log('Login Error: $error');
-                        setState(() {
-                          loginStatus = 'Error occurred while logging in';
-                        });
-                      });
-                    } else {
-                      setState(() {
-                        loginStatus = 'Please enter email & password';
-                      });
-                    }
 
-                    setState(() {
-                      _isLogginIn = false;
-                      textControllerEmail.text = '';
-                      textControllerPassword.text = '';
-                      _isEditingEmail = false;
-                      _isEditingPassword = false;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(20)),
-                    alignment: Alignment.center,
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.white,
+                        setState(() {
+                          _isLogginIn = false;
+                          textControllerEmail.text = '';
+                          textControllerPassword.text = '';
+                          _isEditingEmail = false;
+                          _isEditingPassword = false;
+                        });
+                      },
+                      child: const SizedBox(
+                        width: double
+                            .maxFinite, // This makes the button expand to the max width
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign
+                                .center, // Centers the text within the button
+                          ),
+                        ),
                       ),
                     ),
                   ),
