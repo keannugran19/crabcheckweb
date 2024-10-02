@@ -13,19 +13,46 @@ class ReportsTable extends StatefulWidget {
 
 class _ReportsTableState extends State<ReportsTable> {
   final FirestoreService firestoreService = FirestoreService();
+  String? selectedYear; // Holds the selected year
+  final List<String> years = [
+    '2024',
+    '2025',
+    '2026',
+    '2027',
+    '2028'
+  ]; // Available years for sorting
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Dropdown Button for selecting year
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text("Sort by Year: "),
+            DropdownButton<String>(
+              value: selectedYear,
+              hint: const Text("Select Year"),
+              items: years.map((year) {
+                return DropdownMenuItem<String>(
+                  value: year,
+                  child: Text(year),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedYear = value;
+                });
+              },
+            ),
+          ],
+        ),
         SizedBox(
-          height: (56 * 5) + 40,
+          height: (56 * 8) + 40,
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseFirestore.instance
-                .collection("crabData")
-                .orderBy('timestamp', descending: true)
-                .snapshots(),
+            stream: _getSortedStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -101,6 +128,26 @@ class _ReportsTableState extends State<ReportsTable> {
     );
   }
 
+// sort reports table data per year
+  Stream<QuerySnapshot<Map<String, dynamic>>> _getSortedStream() {
+    // If a year is selected, filter documents by that year
+    if (selectedYear != null) {
+      DateTime start = DateTime(int.parse(selectedYear!), 1, 1);
+      DateTime end = DateTime(int.parse(selectedYear!) + 1, 1, 1);
+
+      return firestoreService.crabs
+          .where('timestamp', isGreaterThanOrEqualTo: start)
+          .where('timestamp', isLessThan: end)
+          .orderBy('timestamp', descending: true)
+          .snapshots();
+    } else {
+      // If no year is selected, return all documents
+      return firestoreService.crabs
+          .orderBy('timestamp', descending: true)
+          .snapshots();
+    }
+  }
+
   List<DataRow> _createRows(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
@@ -125,7 +172,6 @@ class _ReportsTableState extends State<ReportsTable> {
         DataCell(Center(
           child: IconButton(
             onPressed: () async {
-              // Show a confirmation dialog before deleting
               bool confirmDelete = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
