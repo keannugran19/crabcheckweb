@@ -5,8 +5,7 @@ class FirestoreService {
   final db = FirebaseFirestore.instance;
 
   // call the collection
-  final CollectionReference crabs =
-      FirebaseFirestore.instance.collection('crabData');
+  final crabs = FirebaseFirestore.instance.collection('crabData');
 
   // query of getting count data from the database
   Future<int> fetchCount(String species) async {
@@ -35,4 +34,16 @@ class FirestoreService {
     QuerySnapshot snapshot = await crabs.get();
     return snapshot.docs;
   }
+
+  // Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {
+  //   DateTime startOfYear = DateTime(int.parse(year), 1, 1);
+  //   DateTime endOfYear = DateTime(int.parse(year), 12, 31, 23, 59, 59);
+
+  //   QuerySnapshot snapshot = await crabs
+  //       .where('timestamp', isGreaterThanOrEqualTo: startOfYear)
+  //       .where('timestamp', isLessThanOrEqualTo: endOfYear)
+  //       .get();
+
+  //   return snapshot.docs;
+  // }
 }
