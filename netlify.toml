@@ -1,0 +1,4 @@
+[[redirects]]
+from = "/*"
+to = "/main.dart"
+status = 200
