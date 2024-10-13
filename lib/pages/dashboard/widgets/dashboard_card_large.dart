@@ -132,10 +132,11 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     void updateGraphData() {
       // Determine which data to display based on the selected title
-      if (activeTitle.contains('Charybdis Feriatus')) {
-        graphTitle = 'Charybdis Feriatus';
-        graphData = charybdisFeriatus;
-      } else if (activeTitle.contains('Scylla Serrata')) {
+      // if (activeTitle.contains('Charybdis Feriatus')) {
+      //   graphTitle = 'Charybdis Feriatus';
+      //   graphData = charybdisFeriatus;
+      // } else
+      if (activeTitle.contains('Scylla Serrata')) {
         graphTitle = 'Scylla Serrata';
         graphData = scyllaSerrata;
       } else if (activeTitle.contains('Venitus Latreillei')) {
@@ -177,14 +178,28 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         // first row displayed
         Row(
           children: [
+            // InfoCard(
+            //   title: "Charybdis Feriatus",
+            //   value: charybdisFeriatusCount.toString(),
+            //   topColor: Colors.orange,
+            //   isActive: activeTitle == "Charybdis Feriatus",
+            //   onTap: () {
+            //     setState(() {
+            //       activeTitle = "Charybdis Feriatus";
+            //     });
+            //   },
+            // ),
+            // SizedBox(
+            //   width: width / 64,
+            // ),
             InfoCard(
-              title: "Charybdis Feriatus",
-              value: charybdisFeriatusCount.toString(),
+              title: "Total Crabs",
+              value: totalCount.toString(),
               topColor: Colors.orange,
-              isActive: activeTitle == "Charybdis Feriatus",
+              isActive: activeTitle == "Total Crabs",
               onTap: () {
                 setState(() {
-                  activeTitle = "Charybdis Feriatus";
+                  activeTitle = "Total Crabs";
                 });
               },
             ),
@@ -206,13 +221,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               width: width / 64,
             ),
             InfoCard(
-              title: "Venitus Latreillei",
-              value: venitusLatreilleiCount.toString(),
-              topColor: Colors.yellow,
-              isActive: activeTitle == "Venitus Latreillei",
+              title: "Portunos Pelagicus",
+              value: portunosPelagicusCount.toString(),
+              topColor: Colors.blue,
+              isActive: activeTitle == "Portunos Pelagicus",
               onTap: () {
                 setState(() {
-                  activeTitle = "Venitus Latreillei";
+                  activeTitle = "Portunos Pelagicus";
                 });
               },
             ),
@@ -227,13 +242,13 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         Row(
           children: [
             InfoCard(
-              title: "Portunos Pelagicus",
-              value: portunosPelagicusCount.toString(),
-              topColor: Colors.blue,
-              isActive: activeTitle == "Portunos Pelagicus",
+              title: "Venitus Latreillei",
+              value: venitusLatreilleiCount.toString(),
+              topColor: Colors.yellow,
+              isActive: activeTitle == "Venitus Latreillei",
               onTap: () {
                 setState(() {
-                  activeTitle = "Portunos Pelagicus";
+                  activeTitle = "Venitus Latreillei";
                 });
               },
             ),
@@ -248,20 +263,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               onTap: () {
                 setState(() {
                   activeTitle = "Metopograpsus Spp";
-                });
-              },
-            ),
-            SizedBox(
-              width: width / 64,
-            ),
-            InfoCard(
-              title: "Total Crabs",
-              value: totalCount.toString(),
-              topColor: Colors.white,
-              isActive: activeTitle == "Total Crabs",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Total Crabs";
                 });
               },
             ),
@@ -300,7 +301,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               ),
               padding: const EdgeInsets.all(20.0),
               child: PieChartDisplay(
-                charybdisFeriatusCount: charybdisFeriatusCount,
+                // charybdisFeriatusCount: charybdisFeriatusCount,
                 scyllaSerrataCount: scyllaSerrataCount,
                 venitusLatreilleiCount: venitusLatreilleiCount,
                 portunosPelagicusCount: portunosPelagicusCount,

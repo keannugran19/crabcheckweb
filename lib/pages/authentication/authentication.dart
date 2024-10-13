@@ -103,7 +103,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 ),
                 const Row(
                   children: [
-                    Text("Login",
+                    Text("LOGIN",
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ],
@@ -114,7 +114,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 const Row(
                   children: [
                     Text(
-                      "Welcome back to the admin panel.",
+                      "Welcome to the admin panel.",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
