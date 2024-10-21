@@ -85,35 +85,24 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Image.asset(
-                        "lib/assets/images/crabLogo.png",
-                        height: 80,
-                        width: 80,
-                      ),
+                    Image.asset(
+                      "lib/assets/images/crabLogo.png",
+                      height: 80,
+                      width: 80,
                     ),
-                    Expanded(child: Container()),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Row(
-                  children: [
-                    Text("LOGIN",
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text("LOGIN",
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Row(
-                  children: [
-                    Text(
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
                       "Welcome to the admin panel.",
                       style: TextStyle(
                         color: Colors.grey,

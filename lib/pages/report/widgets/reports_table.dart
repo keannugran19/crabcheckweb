@@ -24,6 +24,12 @@ class _ReportsTableState extends State<ReportsTable> {
 
   @override
   Widget build(BuildContext context) {
+    // widgets
+    var textStyle = const TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Colors.black54,
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -73,48 +79,29 @@ class _ReportsTableState extends State<ReportsTable> {
                 dataRowColor: WidgetStateProperty.all(
                   Colors.white,
                 ),
-                columns: const [
+                columns: [
+                  DataColumn2(
+                    size: ColumnSize.S,
+                    label: Text("Image", style: _cellTextStyle),
+                  ),
                   DataColumn2(
                     size: ColumnSize.M,
-                    label: Text(
-                      "Species",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
+                    label: Text("Species", style: _cellTextStyle),
                   ),
                   DataColumn2(
                     size: ColumnSize.S,
-                    label: Text(
-                      'Edibility',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
+                    label: Text('Edibility', style: _cellTextStyle),
                   ),
                   DataColumn2(
                     size: ColumnSize.L,
-                    label: Text(
-                      'Location (Latitude & Longitude)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
+                    label: Text('Location (Latitude & Longitude)',
+                        style: _cellTextStyle),
                   ),
                   DataColumn2(
                     size: ColumnSize.L,
-                    label: Text(
-                      'Date & Time',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
-                    ),
+                    label: Text('Date & Time', style: _cellTextStyle),
                   ),
-                  DataColumn2(
+                  const DataColumn2(
                     size: ColumnSize.S,
                     label: Text(''),
                   ),
@@ -151,6 +138,7 @@ class _ReportsTableState extends State<ReportsTable> {
   List<DataRow> _createRows(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
+      final image = data['image']?.toString() ?? "No Image";
       final species = data['species']?.toString() ?? 'Unknown';
       final edibility = data['edibility']?.toString() ?? 'Unknown';
       final location = data['location'] as GeoPoint?;
@@ -165,6 +153,11 @@ class _ReportsTableState extends State<ReportsTable> {
           : 'Unknown';
 
       return DataRow(cells: [
+        DataCell(Image.network(
+          image,
+          width: 60,
+          height: 60,
+        )),
         DataCell(Text(species, style: _cellTextStyle)),
         DataCell(Text(edibility, style: _cellTextStyle)),
         DataCell(Text(locationText, style: _cellTextStyle)),
