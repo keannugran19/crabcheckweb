@@ -22,14 +22,11 @@ class _ReportsTableState extends State<ReportsTable> {
     '2028'
   ]; // Available years for sorting
 
+  final int _rowsPerPage = 5; // Number of rows per page for pagination
+  int _currentPage = 0; // Current page index
+
   @override
   Widget build(BuildContext context) {
-    // widgets
-    var textStyle = const TextStyle(
-      fontWeight: FontWeight.bold,
-      color: Colors.black54,
-    );
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -37,7 +34,6 @@ class _ReportsTableState extends State<ReportsTable> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Text("Sort by Year: "),
             DropdownButton<String>(
               value: selectedYear,
               hint: const Text("Select Year"),
@@ -50,13 +46,14 @@ class _ReportsTableState extends State<ReportsTable> {
               onChanged: (value) {
                 setState(() {
                   selectedYear = value;
+                  _currentPage = 0; // Reset to first page when year is changed
                 });
               },
             ),
           ],
         ),
         SizedBox(
-          height: (56 * 8) + 40,
+          height: (56 * 5) + 40,
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: _getSortedStream(),
             builder: (context, snapshot) {
@@ -69,44 +66,51 @@ class _ReportsTableState extends State<ReportsTable> {
               }
 
               final rows = _createRows(snapshot.data!);
-              return DataTable2(
-                columnSpacing: 20,
-                horizontalMargin: 12,
-                headingRowColor: WidgetStateProperty.all(
-                  Colors.grey.withOpacity(0.1),
-                ),
-                dividerThickness: 0.5,
-                dataRowColor: WidgetStateProperty.all(
-                  Colors.white,
-                ),
-                columns: [
-                  DataColumn2(
-                    size: ColumnSize.S,
-                    label: Text("Image", style: _cellTextStyle),
+              final paginatedRows = _paginateRows(rows);
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: DataTable2(
+                      columnSpacing: 20,
+                      horizontalMargin: 12,
+                      headingRowColor: WidgetStateProperty.all(
+                        Colors.grey.withOpacity(0.1),
+                      ),
+                      dividerThickness: 0.5,
+                      dataRowColor: WidgetStateProperty.all(Colors.white),
+                      columns: [
+                        DataColumn2(
+                          size: ColumnSize.S,
+                          label: Text("Image", style: _cellTextStyle),
+                        ),
+                        DataColumn2(
+                          size: ColumnSize.M,
+                          label: Text("Species", style: _cellTextStyle),
+                        ),
+                        DataColumn2(
+                          size: ColumnSize.S,
+                          label: Text('Edibility', style: _cellTextStyle),
+                        ),
+                        DataColumn2(
+                          size: ColumnSize.L,
+                          label: Text('Location (Latitude & Longitude)',
+                              style: _cellTextStyle),
+                        ),
+                        DataColumn2(
+                          size: ColumnSize.L,
+                          label: Text('Date & Time', style: _cellTextStyle),
+                        ),
+                        const DataColumn2(
+                          size: ColumnSize.S,
+                          label: Text(''),
+                        ),
+                      ],
+                      rows: paginatedRows,
+                    ),
                   ),
-                  DataColumn2(
-                    size: ColumnSize.M,
-                    label: Text("Species", style: _cellTextStyle),
-                  ),
-                  DataColumn2(
-                    size: ColumnSize.S,
-                    label: Text('Edibility', style: _cellTextStyle),
-                  ),
-                  DataColumn2(
-                    size: ColumnSize.L,
-                    label: Text('Location (Latitude & Longitude)',
-                        style: _cellTextStyle),
-                  ),
-                  DataColumn2(
-                    size: ColumnSize.L,
-                    label: Text('Date & Time', style: _cellTextStyle),
-                  ),
-                  const DataColumn2(
-                    size: ColumnSize.S,
-                    label: Text(''),
-                  ),
+                  _buildPaginationControls(rows.length),
                 ],
-                rows: rows,
               );
             },
           ),
@@ -115,9 +119,64 @@ class _ReportsTableState extends State<ReportsTable> {
     );
   }
 
-// sort reports table data per year
+  // Pagination Controls
+  Widget _buildPaginationControls(int totalRowCount) {
+    final totalPages = (totalRowCount / _rowsPerPage).ceil();
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Page ${_currentPage + 1} of $totalPages',
+            style: TextStyle(
+              color: Colors.black.withOpacity(0.7),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left),
+                color: Colors.blueGrey,
+                onPressed: _currentPage > 0
+                    ? () {
+                        setState(() {
+                          _currentPage--;
+                        });
+                      }
+                    : null,
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_right),
+                color: Colors.blueGrey,
+                onPressed: (_currentPage + 1) < totalPages
+                    ? () {
+                        setState(() {
+                          _currentPage++;
+                        });
+                      }
+                    : null,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Paginate rows based on the current page and rows per page
+  List<DataRow> _paginateRows(List<DataRow> rows) {
+    final start = _currentPage * _rowsPerPage;
+    final end = start + _rowsPerPage;
+    return rows.sublist(start, end > rows.length ? rows.length : end);
+  }
+
+  // Stream sorted by the selected year
   Stream<QuerySnapshot<Map<String, dynamic>>> _getSortedStream() {
-    // If a year is selected, filter documents by that year
     if (selectedYear != null) {
       DateTime start = DateTime(int.parse(selectedYear!), 1, 1);
       DateTime end = DateTime(int.parse(selectedYear!) + 1, 1, 1);
@@ -128,13 +187,13 @@ class _ReportsTableState extends State<ReportsTable> {
           .orderBy('timestamp', descending: true)
           .snapshots();
     } else {
-      // If no year is selected, return all documents
       return firestoreService.crabs
           .orderBy('timestamp', descending: true)
           .snapshots();
     }
   }
 
+  // Create rows from snapshot
   List<DataRow> _createRows(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
@@ -153,11 +212,7 @@ class _ReportsTableState extends State<ReportsTable> {
           : 'Unknown';
 
       return DataRow(cells: [
-        DataCell(Image.network(
-          image,
-          width: 60,
-          height: 60,
-        )),
+        DataCell(Image.network(image, width: 60, height: 60)),
         DataCell(Text(species, style: _cellTextStyle)),
         DataCell(Text(edibility, style: _cellTextStyle)),
         DataCell(Text(locationText, style: _cellTextStyle)),
@@ -197,7 +252,7 @@ class _ReportsTableState extends State<ReportsTable> {
             icon: const Icon(Icons.delete),
             tooltip: 'Delete',
           ),
-        ))
+        )),
       ]);
     }).toList();
   }
