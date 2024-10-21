@@ -130,6 +130,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     late List<double> graphData;
     late String graphTitle;
 
+    // widget style
+    var textStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+
     void updateGraphData() {
       // Determine which data to display based on the selected title
       // if (activeTitle.contains('Charybdis Feriatus')) {
@@ -193,6 +196,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             //   width: width / 64,
             // ),
             InfoCard(
+              image: 'lib/assets/images/loginbackground.png',
               title: "Total Crabs",
               value: totalCount.toString(),
               topColor: Colors.orange,
@@ -200,34 +204,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               onTap: () {
                 setState(() {
                   activeTitle = "Total Crabs";
-                });
-              },
-            ),
-            SizedBox(
-              width: width / 64,
-            ),
-            InfoCard(
-              title: "Scylla Serrata",
-              value: scyllaSerrataCount.toString(),
-              topColor: Colors.brown,
-              isActive: activeTitle == "Scylla Serrata",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Scylla Serrata";
-                });
-              },
-            ),
-            SizedBox(
-              width: width / 64,
-            ),
-            InfoCard(
-              title: "Portunos Pelagicus",
-              value: portunosPelagicusCount.toString(),
-              topColor: Colors.blue,
-              isActive: activeTitle == "Portunos Pelagicus",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Portunos Pelagicus";
                 });
               },
             ),
@@ -242,6 +218,37 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         Row(
           children: [
             InfoCard(
+              image: 'lib/assets/images/crabs/scyllaSerrata.jpg',
+              title: "Scylla Serrata",
+              value: scyllaSerrataCount.toString(),
+              topColor: Colors.brown,
+              isActive: activeTitle == "Scylla Serrata",
+              onTap: () {
+                setState(() {
+                  activeTitle = "Scylla Serrata";
+                });
+              },
+            ),
+            SizedBox(
+              width: width / 64,
+            ),
+            InfoCard(
+              image: 'lib/assets/images/crabs/portunosPelagicus.jpg',
+              title: "Portunos Pelagicus",
+              value: portunosPelagicusCount.toString(),
+              topColor: Colors.blue,
+              isActive: activeTitle == "Portunos Pelagicus",
+              onTap: () {
+                setState(() {
+                  activeTitle = "Portunos Pelagicus";
+                });
+              },
+            ),
+            SizedBox(
+              width: width / 64,
+            ),
+            InfoCard(
+              image: 'lib/assets/images/crabs/venitusLatreillei.jpeg',
               title: "Venitus Latreillei",
               value: venitusLatreilleiCount.toString(),
               topColor: Colors.yellow,
@@ -256,6 +263,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               width: width / 64,
             ),
             InfoCard(
+              image: 'lib/assets/images/crabs/metopograpsusSp.jpeg',
               title: "Metopograpsus Spp",
               value: metopograpsusSppCount.toString(),
               topColor: Colors.purple,
@@ -276,6 +284,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         Column(
           children: [
             // Bar Graph Container
+            Text(
+              "Total Crab count(per month):",
+              style: textStyle,
+            ),
             Container(
               height: 400,
               decoration: BoxDecoration(
@@ -292,6 +304,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             const SizedBox(height: 20),
 
             // Pie Chart Container
+            Text(
+              "Total Crab count(per species):",
+              style: textStyle,
+            ),
             Container(
               height: 400,
               width: double.infinity,

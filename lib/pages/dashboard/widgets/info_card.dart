@@ -2,6 +2,7 @@ import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class InfoCard extends StatelessWidget {
+  final String image;
   final String title;
   final String value;
   final Color topColor;
@@ -15,6 +16,7 @@ class InfoCard extends StatelessWidget {
     required this.topColor,
     required this.isActive,
     required this.onTap,
+    required this.image,
   });
 
   @override
@@ -26,13 +28,14 @@ class InfoCard extends StatelessWidget {
           height: 120,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    offset: const Offset(0, 6),
-                    color: Colors.grey.withOpacity(.1),
-                    blurRadius: 12),
-              ],
+              image: DecorationImage(
+                image: AssetImage(image),
+                fit: BoxFit.cover,
+                colorFilter: const ColorFilter.mode(
+                  Colors.black54,
+                  BlendMode.darken,
+                ),
+              ),
               borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
@@ -54,16 +57,14 @@ class InfoCard extends StatelessWidget {
                         text: "$title\n",
                         style: TextStyle(
                             fontSize: 16,
-                            color: isActive
-                                ? colorScheme.primary
-                                : colorScheme.onSurface)),
+                            color:
+                                isActive ? colorScheme.primary : Colors.white)),
                     TextSpan(
                         text: value,
                         style: TextStyle(
                             fontSize: 40,
-                            color: isActive
-                                ? colorScheme.primary
-                                : colorScheme.onSurface)),
+                            color:
+                                isActive ? colorScheme.primary : Colors.white)),
                   ])),
               Expanded(child: Container())
             ],
