@@ -1,12 +1,13 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/pieChart/indicator.dart';
+import 'package:crabcheckweb1/pages/maps/widgets/location_pin.dart';
 import 'package:crabcheckweb1/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CrabMapWidget extends StatelessWidget {
+class CrabMapWidget extends StatefulWidget {
   const CrabMapWidget({super.key});
 
   // Define species pin color
@@ -18,6 +19,13 @@ class CrabMapWidget extends StatelessWidget {
     'Metopograpsus Spp': "lib/assets/images/purple.png",
   };
 
+  @override
+  State<CrabMapWidget> createState() => _CrabMapWidgetState();
+}
+
+class _CrabMapWidgetState extends State<CrabMapWidget> {
+  bool selected = false;
+
   // Function to build markers
   List<Marker> _buildMarkers(List<QueryDocumentSnapshot> docs) {
     return docs
@@ -25,12 +33,14 @@ class CrabMapWidget extends StatelessWidget {
           final data = doc.data() as Map<String, dynamic>;
           if (data['location'] is GeoPoint &&
               data['species'] is String &&
-              data['timestamp'] is Timestamp) {
+              data['timestamp'] is Timestamp &&
+              data['image'] is String) {
             // Check for Timestamp type
             final geoPoint = data['location'] as GeoPoint;
             final species = data['species'];
             final timestamp = data['timestamp'] as Timestamp;
-            final pinImage = speciesPinMap[species];
+            final userImage = data['image'];
+            final pinImage = CrabMapWidget.speciesPinMap[species];
 
             if (pinImage != null) {
               // Convert Timestamp to DateTime
@@ -44,24 +54,12 @@ class CrabMapWidget extends StatelessWidget {
               final formattedDateTime = "$formattedDate $formattedTime";
 
               return Marker(
-                point: LatLng(geoPoint.latitude, geoPoint.longitude),
-                width: 125,
-                height: 125,
-                child: Tooltip(
-                  message: formattedDateTime,
-                  verticalOffset: 20,
-                  preferBelow: false,
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black87,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Image.asset(pinImage),
-                ),
-              );
+                  point: LatLng(geoPoint.latitude, geoPoint.longitude),
+                  child: LocationPin(
+                    formattedDateTime: formattedDateTime,
+                    pinImage: pinImage,
+                    userImage: userImage,
+                  ));
             }
           }
           return null;
