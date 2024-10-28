@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:intl/intl.dart';
 import 'package:crabcheckweb1/services/firestore.dart';
-import 'package:http/http.dart' as http;
 
 class ReportsTable extends StatefulWidget {
   const ReportsTable({super.key});
@@ -28,24 +25,6 @@ class _ReportsTableState extends State<ReportsTable> {
       _selectedYear = value;
       _currentPage = 0;
     });
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> _getFilteredStream() {
-    if (_selectedYear == null) {
-      return _firestoreService.crabs
-          .orderBy('timestamp', descending: true)
-          .snapshots();
-    }
-
-    final int year = int.parse(_selectedYear!);
-    final start = DateTime(year);
-    final end = DateTime(year + 1);
-
-    return _firestoreService.crabs
-        .where('timestamp', isGreaterThanOrEqualTo: start)
-        .where('timestamp', isLessThan: end)
-        .orderBy('timestamp', descending: true)
-        .snapshots();
   }
 
   @override
@@ -81,7 +60,7 @@ class _ReportsTableState extends State<ReportsTable> {
 
   Widget _buildTable() {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _getFilteredStream(),
+      stream: _firestoreService.getFilteredStream(_selectedYear),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -145,12 +124,12 @@ class _ReportsTableState extends State<ReportsTable> {
       final timestamp = data['timestamp'] as Timestamp?;
 
       return DataRow(cells: [
-        DataCell(_buildImageCell(data['image'])),
+        DataCell(_firestoreService.buildImageCell(data['image'])),
         DataCell(Text(data['species']?.toString() ?? 'Unknown')),
         DataCell(Text(data['edibility']?.toString() ?? 'Unknown')),
         DataCell(
           FutureBuilder(
-            future: _getAddressFromCoordinates(location),
+            future: _firestoreService.getAddressFromCoordinates(location),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text('Loading...');
@@ -163,38 +142,6 @@ class _ReportsTableState extends State<ReportsTable> {
         DataCell(_buildDeleteButton(doc.id)),
       ]);
     }).toList();
-  }
-
-  Widget _buildImageCell(String? imageUrl) {
-    return imageUrl != null
-        ? Image.network(imageUrl, width: 60, height: 60)
-        : const Text('No Image');
-  }
-
-  Future<String> _getAddressFromCoordinates(GeoPoint? location) async {
-    if (location == null) return 'Unknown Location';
-
-    final url = Uri.parse(
-      'https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json&addressdetails=1',
-    );
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final address = data['address'];
-        final barangay = address['suburb'] ?? address['village'] ?? '';
-        final city =
-            address['city'] ?? address['town'] ?? address['municipality'] ?? '';
-
-        return 'Brgy. ${barangay.isNotEmpty ? barangay + ', ' : ''}$city City';
-      } else {
-        return 'Error: ${response.statusCode}';
-      }
-    } catch (e) {
-      print('Error retrieving address: $e');
-      return 'Unknown Location';
-    }
   }
 
   String _formatTimestamp(Timestamp? timestamp) {
