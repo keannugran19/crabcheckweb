@@ -20,14 +20,14 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
 // Monthly counts for each species
   List<double> totalCrabs = List<double>.filled(12, 0);
-  List<double> charybdisFeriatus = List<double>.filled(12, 0);
+  List<double> cardisomaCarnifex = List<double>.filled(12, 0);
   List<double> scyllaSerrata = List<double>.filled(12, 0);
   List<double> venitusLatreillei = List<double>.filled(12, 0);
   List<double> portunosPelagicus = List<double>.filled(12, 0);
   List<double> metopograpsusSpp = List<double>.filled(12, 0);
 
 // Total counts for each species
-  int charybdisFeriatusCount = 0;
+  int cardisomaCarnifexCount = 0;
   int scyllaSerrataCount = 0;
   int venitusLatreilleiCount = 0;
   int portunosPelagicusCount = 0;
@@ -46,7 +46,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
   Future<void> fetchAllCounts() async {
     Map<String, Future<int>> countFutures = {
-      'Charybdis Feriatus': firestoreService.fetchCount('Charybdis Feriatus'),
+      'Cardisoma Carnifex': firestoreService.fetchCount('Cardisoma Carnifex'),
       'Scylla Serrata': firestoreService.fetchCount('Scylla Serrata'),
       'Venitus Latreillei': firestoreService.fetchCount('Venitus Latreillei'),
       'Portunos Pelagicus': firestoreService.fetchCount('Portunos Pelagicus'),
@@ -58,7 +58,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     };
 
     setState(() {
-      charybdisFeriatusCount = counts['Charybdis Feriatus'] ?? 0;
+      cardisomaCarnifexCount = counts['Cardisoma Carnifex'] ?? 0;
       scyllaSerrataCount = counts['Scylla Serrata'] ?? 0;
       venitusLatreilleiCount = counts['Venitus Latreillei'] ?? 0;
       portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
@@ -73,7 +73,8 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   }
 
   void processCrabData(List<QueryDocumentSnapshot> documents) {
-    resetMonthlyCounts();
+    resetMonthlyCounts(totalCrabs, cardisomaCarnifex, scyllaSerrata,
+        venitusLatreillei, portunosPelagicus, metopograpsusSpp);
 
     for (var doc in documents) {
       DateTime dateTime = (doc['timestamp'] as Timestamp).toDate();
@@ -86,10 +87,17 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     setState(() {});
   }
+  // !processCrabData dump
 
-  void resetMonthlyCounts() {
+  void resetMonthlyCounts(
+      List<double> totalCrabs,
+      List<double> cardisomaCarnifex,
+      List<double> scyllaSerrata,
+      List<double> venitusLatreillei,
+      List<double> portunosPelagicus,
+      List<double> metopograpsusSpp) {
     totalCrabs.fillRange(0, 12, 0);
-    charybdisFeriatus.fillRange(0, 12, 0);
+    cardisomaCarnifex.fillRange(0, 12, 0);
     scyllaSerrata.fillRange(0, 12, 0);
     venitusLatreillei.fillRange(0, 12, 0);
     portunosPelagicus.fillRange(0, 12, 0);
@@ -99,7 +107,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   void incrementSpeciesCount(String species, int monthIndex) {
     switch (species) {
       case 'Charybdis Feriatus':
-        charybdisFeriatus[monthIndex]++;
+        cardisomaCarnifex[monthIndex]++;
         break;
       case 'Scylla Serrata':
         scyllaSerrata[monthIndex]++;
@@ -135,11 +143,10 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     void updateGraphData() {
       // Determine which data to display based on the selected title
-      // if (activeTitle.contains('Charybdis Feriatus')) {
-      //   graphTitle = 'Charybdis Feriatus';
-      //   graphData = charybdisFeriatus;
-      // } else
-      if (activeTitle.contains('Scylla Serrata')) {
+      if (activeTitle.contains('Cardisoma Carnifex')) {
+        graphTitle = 'Cardisoma Carnifex';
+        graphData = cardisomaCarnifex;
+      } else if (activeTitle.contains('Scylla Serrata')) {
         graphTitle = 'Scylla Serrata';
         graphData = scyllaSerrata;
       } else if (activeTitle.contains('Venitus Latreillei')) {
@@ -181,20 +188,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         // first row displayed
         Row(
           children: [
-            // InfoCard(
-            //   title: "Charybdis Feriatus",
-            //   value: charybdisFeriatusCount.toString(),
-            //   topColor: Colors.orange,
-            //   isActive: activeTitle == "Charybdis Feriatus",
-            //   onTap: () {
-            //     setState(() {
-            //       activeTitle = "Charybdis Feriatus";
-            //     });
-            //   },
-            // ),
-            // SizedBox(
-            //   width: width / 64,
-            // ),
             InfoCard(
               image: 'lib/assets/images/loginbackground.png',
               title: "Total Crabs",
@@ -217,6 +210,21 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         //* second row displayed
         Row(
           children: [
+            InfoCard(
+              image: 'lib/assets/images/crabs/cardisomaCarnifex.jpg',
+              title: "Cardisoma Carnifex",
+              value: cardisomaCarnifexCount.toString(),
+              topColor: Colors.orange,
+              isActive: activeTitle == "Cardisoma Carnifex",
+              onTap: () {
+                setState(() {
+                  activeTitle = "Cardisoma Carnifex";
+                });
+              },
+            ),
+            SizedBox(
+              width: width / 64,
+            ),
             InfoCard(
               image: 'lib/assets/images/crabs/scyllaSerrata.jpg',
               title: "Scylla Serrata",
@@ -317,7 +325,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               ),
               padding: const EdgeInsets.all(20.0),
               child: PieChartDisplay(
-                // charybdisFeriatusCount: charybdisFeriatusCount,
+                cardisomaCarnifexCount: cardisomaCarnifexCount,
                 scyllaSerrataCount: scyllaSerrataCount,
                 venitusLatreilleiCount: venitusLatreilleiCount,
                 portunosPelagicusCount: portunosPelagicusCount,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class FirestoreService {
+  
   // call the database
   final db = FirebaseFirestore.instance;
 
@@ -88,6 +89,8 @@ class FirestoreService {
         ? Image.network(imageUrl, width: 60, height: 60)
         : const Text('No Image');
   }
+
+  
 
   // Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {
   //   DateTime startOfYear = DateTime(int.parse(year), 1, 1);

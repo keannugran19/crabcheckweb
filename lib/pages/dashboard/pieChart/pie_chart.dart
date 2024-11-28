@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PieChartDisplay extends StatefulWidget {
-  // final int charybdisFeriatusCount;
+  final int cardisomaCarnifexCount;
   final int scyllaSerrataCount;
   final int venitusLatreilleiCount;
   final int portunosPelagicusCount;
@@ -11,7 +11,7 @@ class PieChartDisplay extends StatefulWidget {
 
   const PieChartDisplay({
     super.key,
-    // required this.charybdisFeriatusCount,
+    required this.cardisomaCarnifexCount,
     required this.scyllaSerrataCount,
     required this.venitusLatreilleiCount,
     required this.portunosPelagicusCount,
