@@ -123,7 +123,22 @@ class _ReportsTableState extends State<ReportsTable> {
       final timestamp = data['timestamp'] as Timestamp?;
 
       return DataRow(cells: [
-        DataCell(_firestoreService.buildImageCell(data['image'])),
+        DataCell(
+          GestureDetector(
+            onTap: () {
+              // Show the image preview dialog when the image is tapped
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: InteractiveViewer(
+                    child: Image.network(data['image']),
+                  ),
+                ),
+              );
+            },
+            child: _firestoreService.buildImageCell(data['image']),
+          ),
+        ),
         DataCell(Text(data['species']?.toString() ?? 'Unknown')),
         DataCell(Text(data['edibility']?.toString() ?? 'Unknown')),
         DataCell(Text(data['address']?.toString() ?? 'Unknown location')),

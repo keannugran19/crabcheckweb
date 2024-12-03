@@ -1,12 +1,12 @@
-import 'package:crabcheckweb1/pages/maps/widgets/crab_dropdown.dart';
-import 'package:crabcheckweb1/pages/maps/widgets/location_pin.dart';
-import 'package:crabcheckweb1/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../services/firestore.dart';
 import '../../dashboard/pieChart/indicator.dart';
+import 'crab_dropdown.dart';
+import 'location_pin.dart';
 
 class CrabMapWidget extends StatefulWidget {
   const CrabMapWidget({super.key});
@@ -78,124 +78,126 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
     final FirestoreService firestoreService = FirestoreService();
 
     return Scaffold(
-      body: Row(
+      body: Stack(
         children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: firestoreService.crabs.snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          // Full-screen map
+          StreamBuilder<QuerySnapshot>(
+            stream: firestoreService.crabs.snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                final markers = _buildMarkers(snapshot.data!.docs);
+              final markers = _buildMarkers(snapshot.data!.docs);
 
-                return FlutterMap(
-                  options: const MapOptions(
-                    initialCenter: LatLng(7.2885, 125.6938),
-                    initialZoom: 13,
-                    minZoom: 12,
+              return FlutterMap(
+                options: const MapOptions(
+                  initialCenter: LatLng(7.2885, 125.6938),
+                  initialZoom: 13,
+                  minZoom: 12,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
                   ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.example.app',
-                    ),
-                    MarkerLayer(markers: markers),
-                  ],
-                );
-              },
-            ),
+                  MarkerLayer(markers: markers),
+                ],
+              );
+            },
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Crab Mapping",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
+          // Right-side column with transparency
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              width: 250,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.5), // Transparent white
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Crab Mapping",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Filter Crabs:",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    CrabSpeciesDropdown(
-                      selectedSpecies: _selectedSpecies,
-                      onSelectedSpeciesChanged: _updateSelectedSpecies,
-                    ),
-                    const SizedBox(height: 16),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Edible Section
-                        Text(
-                          'Edible:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black,
+                  const SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Filter Crabs:",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      CrabSpeciesDropdown(
+                        selectedSpecies: _selectedSpecies,
+                        onSelectedSpeciesChanged: _updateSelectedSpecies,
+                      ),
+                      const SizedBox(height: 16),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Edible:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 4),
-                        Indicator(
-                          color: Colors.brown,
-                          text: 'Scylla Serrata',
-                          isSquare: true,
-                        ),
-                        SizedBox(height: 4),
-                        Indicator(
-                          color: Colors.blue,
-                          text: 'Portunos Pelagicus',
-                          isSquare: true,
-                        ),
-                        Indicator(
-                          color: Colors.orange,
-                          text: 'Cardisoma Carnifex',
-                          isSquare: true,
-                        ),
-
-                        SizedBox(height: 16),
-
-                        // Inedible Section
-                        Text(
-                          'Inedible:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black,
+                          SizedBox(height: 4),
+                          Indicator(
+                            color: Colors.brown,
+                            text: 'Scylla Serrata',
+                            isSquare: true,
                           ),
-                        ),
-                        SizedBox(height: 4),
-                        Indicator(
-                          color: Colors.yellow,
-                          text: 'Venitus Latreillei',
-                          isSquare: true,
-                        ),
-                        SizedBox(height: 4),
-                        Indicator(
-                          color: Colors.purple,
-                          text: 'Metopograpsus Spp',
-                          isSquare: true,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
+                          SizedBox(height: 4),
+                          Indicator(
+                            color: Colors.blue,
+                            text: 'Portunos Pelagicus',
+                            isSquare: true,
+                          ),
+                          Indicator(
+                            color: Colors.orange,
+                            text: 'Cardisoma Carnifex',
+                            isSquare: true,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Inedible:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Indicator(
+                            color: Colors.yellow,
+                            text: 'Venitus Latreillei',
+                            isSquare: true,
+                          ),
+                          SizedBox(height: 4),
+                          Indicator(
+                            color: Colors.purple,
+                            text: 'Metopograpsus Spp',
+                            isSquare: true,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
