@@ -87,7 +87,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     setState(() {});
   }
-  // !processCrabData dump
 
   void resetMonthlyCounts(
       List<double> totalCrabs,
@@ -106,7 +105,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
   void incrementSpeciesCount(String species, int monthIndex) {
     switch (species) {
-      case 'Charybdis Feriatus':
+      case 'Cardisoma Carnifex':
         cardisomaCarnifex[monthIndex]++;
         break;
       case 'Scylla Serrata':
@@ -140,32 +139,27 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
     // widget style
     var textStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-
-    void updateGraphData() {
-      // Determine which data to display based on the selected title
-      if (activeTitle.contains('Cardisoma Carnifex')) {
-        graphTitle = 'Cardisoma Carnifex';
-        graphData = cardisomaCarnifex;
-      } else if (activeTitle.contains('Scylla Serrata')) {
-        graphTitle = 'Scylla Serrata';
-        graphData = scyllaSerrata;
-      } else if (activeTitle.contains('Venitus Latreillei')) {
-        graphTitle = 'Venitus Latreillei';
-        graphData = venitusLatreillei;
-      } else if (activeTitle.contains('Portunos Pelagicus')) {
-        graphTitle = 'Portunos Pelagicus';
-        graphData = portunosPelagicus;
-      } else if (activeTitle.contains('Metopograpsus Spp')) {
-        graphTitle = 'Metopograpsus Spp';
-        graphData = metopograpsusSpp;
-      } else {
-        // Default to Total Crabs
-        graphTitle = 'Total Crabs';
-        graphData = totalCrabs;
-      }
+    // Determine which data to display based on the selected title
+    if (activeTitle.contains('Cardisoma Carnifex')) {
+      graphTitle = 'Cardisoma Carnifex';
+      graphData = cardisomaCarnifex;
+    } else if (activeTitle.contains('Scylla Serrata')) {
+      graphTitle = 'Scylla Serrata';
+      graphData = scyllaSerrata;
+    } else if (activeTitle.contains('Venitus Latreillei')) {
+      graphTitle = 'Venitus Latreillei';
+      graphData = venitusLatreillei;
+    } else if (activeTitle.contains('Portunos Pelagicus')) {
+      graphTitle = 'Portunos Pelagicus';
+      graphData = portunosPelagicus;
+    } else if (activeTitle.contains('Metopograpsus Spp')) {
+      graphTitle = 'Metopograpsus Spp';
+      graphData = metopograpsusSpp;
+    } else {
+      // Default to Total Crabs
+      graphTitle = 'Total Crabs';
+      graphData = totalCrabs;
     }
-
-    updateGraphData();
 
 //* DASHBOARD
     return Column(
@@ -192,7 +186,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               image: 'lib/assets/images/loginbackground.png',
               title: "Total Crabs",
               value: totalCount.toString(),
-              topColor: Colors.orange,
+              topColor: Colors.grey,
               isActive: activeTitle == "Total Crabs",
               onTap: () {
                 setState(() {

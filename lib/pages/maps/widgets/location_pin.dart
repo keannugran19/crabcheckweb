@@ -1,7 +1,9 @@
+import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class LocationPin extends StatefulWidget {
   final String formattedDateTime;
+  final String species;
   final String pinImage;
   final String userImage;
 
@@ -10,6 +12,7 @@ class LocationPin extends StatefulWidget {
     required this.formattedDateTime,
     required this.pinImage,
     required this.userImage,
+    required this.species,
   });
 
   @override
@@ -31,32 +34,47 @@ class _LocationPinState extends State<LocationPin> {
         alignment: Alignment.center,
         children: [
           OverflowBox(
-            maxWidth: 200,
-            maxHeight: 200,
+            maxWidth: 150,
+            maxHeight: 150,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: selected ? 200 : 40,
+              width: selected ? 150 : 40,
               curve: Curves.easeOutCubic,
               decoration: BoxDecoration(
                 color: selected ? Colors.white : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: selected
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          widget.userImage,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.contain,
+                  ? SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              widget.userImage,
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.contain,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              widget.formattedDateTime,
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 12),
+                            ),
+                            Text(
+                              widget.species,
+                              style: const TextStyle(
+                                  color: textColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
-                        Text(
-                          widget.formattedDateTime,
-                          style:
-                              TextStyle(color: Colors.grey[700], fontSize: 14),
-                        ),
-                      ],
+                      ),
                     )
                   : Image.asset(widget.pinImage),
             ),

@@ -62,14 +62,14 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Indicator(
-            //   color: Colors.orange,
-            //   text: 'Charybdis Feriatus',
-            //   isSquare: true,
-            // ),
-            // SizedBox(
-            //   height: 4,
-            // ),
+            Indicator(
+              color: Colors.orange,
+              text: 'Cardisoma Carnifex',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
             Indicator(
               color: Colors.brown,
               text: 'Scylla Serrata',
@@ -112,26 +112,26 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+    return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 40.0 : 32.0;
       final radius = isTouched ? 100.0 : 90.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
-        // case 0:
-        //   return PieChartSectionData(
-        //     color: Colors.brown,
-        //     value: widget.charybdisFeriatusCount.toDouble(),
-        //     title: widget.charybdisFeriatusCount.toString(),
-        //     radius: radius,
-        //     titleStyle: TextStyle(
-        //       fontSize: fontSize,
-        //       fontWeight: FontWeight.bold,
-        //       color: Colors.white,
-        //       shadows: shadows,
-        //     ),
-        //   );
         case 0:
+          return PieChartSectionData(
+            color: Colors.orange,
+            value: widget.cardisomaCarnifexCount.toDouble(),
+            title: widget.cardisomaCarnifexCount.toString(),
+            radius: radius,
+            titleStyle: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: shadows,
+            ),
+          );
+        case 1:
           return PieChartSectionData(
             color: Colors.brown,
             value: widget.scyllaSerrataCount.toDouble(),
@@ -144,7 +144,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               shadows: shadows,
             ),
           );
-        case 1:
+        case 2:
           return PieChartSectionData(
             color: Colors.yellow,
             value: widget.venitusLatreilleiCount.toDouble(),
@@ -157,7 +157,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               shadows: shadows,
             ),
           );
-        case 2:
+        case 3:
           return PieChartSectionData(
             color: Colors.blue,
             value: widget.portunosPelagicusCount.toDouble(),
@@ -170,7 +170,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               shadows: shadows,
             ),
           );
-        case 3:
+        case 4:
           return PieChartSectionData(
             color: Colors.purple,
             value: widget.metopograpsusSppCount.toDouble(),

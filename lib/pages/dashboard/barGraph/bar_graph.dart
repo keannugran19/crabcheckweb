@@ -21,10 +21,10 @@ class BarGraph extends StatelessWidget {
     Color? rodColorUnfilled;
 
     switch (activeTitle) {
-      // case 'Charybdis Feriatus':
-      //   rodColor = Colors.orange;
-      //   rodColorUnfilled = Colors.orange[200];
-      //   break;
+      case 'Cardisoma Carnifex':
+        rodColor = Colors.orange;
+        rodColorUnfilled = Colors.orange[200];
+        break;
       case 'Scylla Serrata':
         rodColor = Colors.brown;
         rodColorUnfilled = Colors.brown[200];

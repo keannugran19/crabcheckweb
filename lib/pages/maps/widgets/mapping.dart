@@ -1,5 +1,4 @@
-import 'package:crabcheckweb1/constants/colors.dart';
-import 'package:crabcheckweb1/pages/dashboard/pieChart/indicator.dart';
+import 'package:crabcheckweb1/pages/maps/widgets/crab_dropdown.dart';
 import 'package:crabcheckweb1/pages/maps/widgets/location_pin.dart';
 import 'package:crabcheckweb1/services/firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +6,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../dashboard/pieChart/indicator.dart';
+
 class CrabMapWidget extends StatefulWidget {
   const CrabMapWidget({super.key});
 
-  // Define species pin color
   static const Map<String, String> speciesPinMap = {
-    // 'Charybdis Feriatus': "lib/assets/images/orange.png",
+    'Cardisoma Carnifex': "lib/assets/images/orange.png",
     'Venitus Latreillei': "lib/assets/images/yellow.png",
     'Scylla Serrata': "lib/assets/images/brown.png",
     'Portunos Pelagicus': "lib/assets/images/darkgray.png",
@@ -24,42 +24,47 @@ class CrabMapWidget extends StatefulWidget {
 }
 
 class _CrabMapWidgetState extends State<CrabMapWidget> {
-  bool selected = false;
+  String _selectedSpecies = 'All';
 
-  // Function to build markers
+  void _updateSelectedSpecies(String species) {
+    setState(() {
+      _selectedSpecies = species;
+    });
+  }
+
   List<Marker> _buildMarkers(List<QueryDocumentSnapshot> docs) {
     return docs
+        .where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final species = data['species'] as String?;
+          return _selectedSpecies == 'All' || species == _selectedSpecies;
+        })
         .map((doc) {
           final data = doc.data() as Map<String, dynamic>;
           if (data['location'] is GeoPoint &&
               data['species'] is String &&
               data['timestamp'] is Timestamp &&
               data['image'] is String) {
-            // Check for Timestamp type
             final geoPoint = data['location'] as GeoPoint;
-            final species = data['species'];
+            final species = data['species']!;
             final timestamp = data['timestamp'] as Timestamp;
             final userImage = data['image'];
             final pinImage = CrabMapWidget.speciesPinMap[species];
 
             if (pinImage != null) {
-              // Convert Timestamp to DateTime
               final dateTime = timestamp.toDate();
-
-              // Format date and time
-              final formattedDate =
-                  "${dateTime.month}-${dateTime.day.toString().padLeft(2, '0')}-${dateTime.year.toString().padLeft(2, '0')}";
-              final formattedTime =
-                  "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
-              final formattedDateTime = "$formattedDate $formattedTime";
+              final formattedDateTime =
+                  "${dateTime.month}-${dateTime.day.toString().padLeft(2, '0')}-${dateTime.year.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
 
               return Marker(
-                  point: LatLng(geoPoint.latitude, geoPoint.longitude),
-                  child: LocationPin(
-                    formattedDateTime: formattedDateTime,
-                    pinImage: pinImage,
-                    userImage: userImage,
-                  ));
+                point: LatLng(geoPoint.latitude, geoPoint.longitude),
+                child: LocationPin(
+                  species: species,
+                  formattedDateTime: formattedDateTime,
+                  pinImage: pinImage,
+                  userImage: userImage,
+                ),
+              );
             }
           }
           return null;
@@ -75,7 +80,6 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
     return Scaffold(
       body: Row(
         children: [
-          // map view
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: firestoreService.crabs.snapshots(),
@@ -89,8 +93,8 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                 return FlutterMap(
                   options: const MapOptions(
                     initialCenter: LatLng(7.2885, 125.6938),
-                    initialZoom: 15,
-                    minZoom: 15,
+                    initialZoom: 13,
+                    minZoom: 12,
                   ),
                   children: [
                     TileLayer(
@@ -108,14 +112,6 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
             decoration: const BoxDecoration(
               color: Colors.white,
-              // borderRadius: BorderRadius.circular(10),
-              // boxShadow: const [
-              //   BoxShadow(
-              //     color: Colors.black12,
-              //     blurRadius: 8,
-              //     spreadRadius: 2,
-              //   ),
-              // ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,68 +120,81 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                   "Crab Mapping",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: colorScheme.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Edible Section
-                    Text(
-                      'Edible:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
+                    const Text(
+                      "Filter Crabs:",
+                      style: TextStyle(fontSize: 14),
                     ),
-                    // SizedBox(height: 4),
-                    // Indicator(
-                    //   color: Colors.orange,
-                    //   text: 'Charybdis Feriatus',
-                    //   isSquare: true,
-                    // ),
-                    SizedBox(height: 4),
-                    Indicator(
-                      color: Colors.brown,
-                      text: 'Scylla Serrata',
-                      isSquare: true,
+                    CrabSpeciesDropdown(
+                      selectedSpecies: _selectedSpecies,
+                      onSelectedSpeciesChanged: _updateSelectedSpecies,
                     ),
-                    SizedBox(height: 4),
-                    Indicator(
-                      color: Colors.blue,
-                      text: 'Portunos Pelagicus',
-                      isSquare: true,
-                    ),
+                    const SizedBox(height: 16),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Edible Section
+                        Text(
+                          'Edible:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Indicator(
+                          color: Colors.brown,
+                          text: 'Scylla Serrata',
+                          isSquare: true,
+                        ),
+                        SizedBox(height: 4),
+                        Indicator(
+                          color: Colors.blue,
+                          text: 'Portunos Pelagicus',
+                          isSquare: true,
+                        ),
+                        Indicator(
+                          color: Colors.orange,
+                          text: 'Cardisoma Carnifex',
+                          isSquare: true,
+                        ),
 
-                    SizedBox(height: 16),
+                        SizedBox(height: 16),
 
-                    // Inedible Section
-                    Text(
-                      'Inedible:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Indicator(
-                      color: Colors.yellow,
-                      text: 'Venitus Latreillei',
-                      isSquare: true,
-                    ),
-                    SizedBox(height: 4),
-                    Indicator(
-                      color: Colors.purple,
-                      text: 'Metopograpsus Spp',
-                      isSquare: true,
-                    ),
+                        // Inedible Section
+                        Text(
+                          'Inedible:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Indicator(
+                          color: Colors.yellow,
+                          text: 'Venitus Latreillei',
+                          isSquare: true,
+                        ),
+                        SizedBox(height: 4),
+                        Indicator(
+                          color: Colors.purple,
+                          text: 'Metopograpsus Spp',
+                          isSquare: true,
+                        ),
+                      ],
+                    )
                   ],
-                )
+                ),
               ],
             ),
           ),

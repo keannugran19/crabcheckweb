@@ -34,7 +34,7 @@ class _ReportsTableState extends State<ReportsTable> {
       children: [
         _buildYearFilter(),
         SizedBox(
-          height: (56 * _rowsPerPage) + 40,
+          height: (56 * _rowsPerPage) + 80,
           child: _buildTable(),
         ),
       ],
@@ -109,7 +109,7 @@ class _ReportsTableState extends State<ReportsTable> {
           size: ColumnSize.S, label: Text('Edibility', style: textStyle)),
       DataColumn2(
         size: ColumnSize.L,
-        label: Text('Location', style: textStyle),
+        label: Text('Address', style: textStyle),
       ),
       DataColumn2(
           size: ColumnSize.L, label: Text('Date & Time', style: textStyle)),
@@ -120,24 +120,13 @@ class _ReportsTableState extends State<ReportsTable> {
   List<DataRow> _createDataRows(QuerySnapshot<Map<String, dynamic>> snapshot) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
-      final location = data['location'] as GeoPoint?;
       final timestamp = data['timestamp'] as Timestamp?;
 
       return DataRow(cells: [
         DataCell(_firestoreService.buildImageCell(data['image'])),
         DataCell(Text(data['species']?.toString() ?? 'Unknown')),
         DataCell(Text(data['edibility']?.toString() ?? 'Unknown')),
-        DataCell(
-          FutureBuilder(
-            future: _firestoreService.getAddressFromCoordinates(location),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text('Loading...');
-              }
-              return Text(snapshot.data.toString());
-            },
-          ),
-        ),
+        DataCell(Text(data['address']?.toString() ?? 'Unknown location')),
         DataCell(Text(_formatTimestamp(timestamp))),
         DataCell(_buildDeleteButton(doc.id)),
       ]);
