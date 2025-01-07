@@ -7,6 +7,7 @@ class FirestoreService {
 
   // call the collection
   final crabs = FirebaseFirestore.instance.collection('crabData');
+  final reports = FirebaseFirestore.instance.collection('userReports');
 
   // query of getting count data from the database
   Future<int> fetchCount(String species) async {
@@ -61,6 +62,12 @@ class FirestoreService {
         : const Text('No Image');
   }
 
+  // get total count of unclassified documents
+  Future<int> fetchReportCount() async {
+    final query = reports;
+    final snapshot = await query.count().get();
+    return snapshot.count!;
+  }
   // filter crabs by species
 
   // Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {

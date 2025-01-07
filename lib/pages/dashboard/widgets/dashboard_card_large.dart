@@ -33,6 +33,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   int portunosPelagicusCount = 0;
   int metopograpsusSppCount = 0;
   int totalCount = 0;
+  int unclassifiedCount = 0;
 
   bool isLoading = true;
   String activeTitle = "Total Crabs";
@@ -51,6 +52,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       'Venitus Latreillei': firestoreService.fetchCount('Venitus Latreillei'),
       'Portunos Pelagicus': firestoreService.fetchCount('Portunos Pelagicus'),
       'Metopograpsus Spp': firestoreService.fetchCount('Metopograpsus Spp'),
+      'Unclassified': firestoreService.fetchReportCount(),
     };
 
     Map<String, int> counts = {
@@ -64,6 +66,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
       metopograpsusSppCount = counts['Metopograpsus Spp'] ?? 0;
       totalCount = counts.values.fold(0, (a, b) => a + b);
+      unclassifiedCount = counts['Unclassified'] ?? 0;
     });
   }
 
@@ -193,6 +196,24 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                   activeTitle = "Total Crabs";
                 });
               },
+            ),
+            SizedBox(
+              width: width / 64,
+            ),
+            SizedBox(
+              width: width / 4,
+              child: InfoCard(
+                image: 'lib/assets/images/unclassified.jpg',
+                title: "Unclassified",
+                value: unclassifiedCount.toString(),
+                topColor: Colors.red,
+                isActive: false,
+                onTap: () {
+                  // setState(() {
+                  //   activeTitle = "Total Crabs";
+                  // });
+                },
+              ),
             ),
           ],
         ),
