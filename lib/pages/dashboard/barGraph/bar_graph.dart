@@ -75,21 +75,7 @@ class BarGraph extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.calendar_month, size: 16, color: Colors.grey[700]),
-            const SizedBox(width: 8),
-            Text(
-              'Total Crabs per Month',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
-            ),
-          ],
-        ),
+        topBarTitle(),
         const SizedBox(height: 20),
         Expanded(
           child: Padding(
@@ -99,52 +85,9 @@ class BarGraph extends StatelessWidget {
                 alignment: BarChartAlignment.spaceAround,
                 maxY: roundedMax,
                 minY: 0,
-                barTouchData: BarTouchData(
-                  enabled: true,
-                  touchTooltipData: BarTouchTooltipData(
-                    tooltipRoundedRadius: 8,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      return BarTooltipItem(
-                        '${rod.toY.toInt()} crab/s\n',
-                        const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                titlesData: const FlTitlesData(
-                  show: true,
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: getTopBottomTitles,
-                    ),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: true, interval: 5),
-                  ),
-                  rightTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  drawHorizontalLine: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 3,
-                  checkToShowHorizontalLine: (value) => true,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: Colors.grey.shade400, // Darker color
-                      strokeWidth: 1.0, // Slightly thinner
-                    );
-                  },
-                ),
+                barTouchData: barTouchData(),
+                titlesData: titlesData(),
+                gridData: gridData(),
                 borderData: FlBorderData(
                   show: true,
                   border: Border(
@@ -193,6 +136,79 @@ class BarGraph extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget topBarTitle() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(Icons.calendar_month, size: 16, color: Colors.grey[700]),
+      const SizedBox(width: 8),
+      Text(
+        'Total Crabs per Month',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[800],
+        ),
+      ),
+    ],
+  );
+}
+
+BarTouchData barTouchData() {
+  return BarTouchData(
+    enabled: true,
+    touchTooltipData: BarTouchTooltipData(
+      tooltipRoundedRadius: 8,
+      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+        return BarTooltipItem(
+          '${rod.toY.toInt()} crab/s\n',
+          const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      },
+    ),
+  );
+}
+
+FlTitlesData titlesData() {
+  return const FlTitlesData(
+    show: true,
+    bottomTitles: AxisTitles(
+      sideTitles: SideTitles(
+        showTitles: true,
+        getTitlesWidget: getTopBottomTitles,
+      ),
+    ),
+    leftTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: true, interval: 5),
+    ),
+    rightTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+    topTitles: AxisTitles(
+      sideTitles: SideTitles(showTitles: false),
+    ),
+  );
+}
+
+FlGridData gridData() {
+  return FlGridData(
+    show: true,
+    drawHorizontalLine: true,
+    drawVerticalLine: false,
+    horizontalInterval: 3,
+    checkToShowHorizontalLine: (value) => true,
+    getDrawingHorizontalLine: (value) {
+      return FlLine(
+        color: Colors.grey.shade400,
+        strokeWidth: 1.0,
+      );
+    },
+  );
 }
 
 Widget getTopBottomTitles(double value, TitleMeta meta) {

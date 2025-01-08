@@ -29,135 +29,12 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.pie_chart, size: 16, color: Colors.grey[700]),
-            const SizedBox(width: 8),
-            Text(
-              'Crab Species Distribution',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
-            ),
-          ],
-        ),
+        topBarTitle(),
         const SizedBox(height: 20),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: PieChart(
-              PieChartData(
-                pieTouchData: PieTouchData(
-                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    setState(() {
-                      if (!event.isInterestedForInteractions ||
-                          pieTouchResponse == null ||
-                          pieTouchResponse.touchedSection == null) {
-                        touchedIndex = -1;
-                        return;
-                      }
-                      touchedIndex =
-                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    });
-                  },
-                ),
-                borderData: FlBorderData(show: false),
-                sectionsSpace: 2,
-                centerSpaceRadius: 40, // Reduced from 50
-                sections: List.generate(5, (i) {
-                  final isTouched = i == touchedIndex;
-                  final fontSize =
-                      isTouched ? 18.0 : 14.0; // Reduced from 20.0 and 16.0
-                  final radius =
-                      isTouched ? 90.0 : 80.0; // Reduced from 110.0 and 100.0
-                  final shadows = [
-                    Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 3)
-                  ];
-                  switch (i) {
-                    case 0:
-                      return PieChartSectionData(
-                        color: const Color(0xFFFF9800),
-                        value: widget.cardisomaCarnifexCount.toDouble(),
-                        title:
-                            '${((widget.cardisomaCarnifexCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-                        radius: radius,
-                        titleStyle: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: shadows,
-                        ),
-                      );
-                    case 1:
-                      return PieChartSectionData(
-                        color: const Color(0xFF795548),
-                        value: widget.scyllaSerrataCount.toDouble(),
-                        title:
-                            '${((widget.scyllaSerrataCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-                        radius: radius,
-                        titleStyle: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: shadows,
-                        ),
-                      );
-                    case 2:
-                      return PieChartSectionData(
-                        color: const Color(0xFFFDD835),
-                        value: widget.venitusLatreilleiCount.toDouble(),
-                        title:
-                            '${((widget.venitusLatreilleiCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-                        radius: radius,
-                        titleStyle: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: shadows,
-                        ),
-                      );
-                    case 3:
-                      return PieChartSectionData(
-                        color: const Color(0xFF2196F3),
-                        value: widget.portunosPelagicusCount.toDouble(),
-                        title:
-                            '${((widget.portunosPelagicusCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-                        radius: radius,
-                        titleStyle: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: shadows,
-                        ),
-                      );
-                    case 4:
-                      return PieChartSectionData(
-                        color: const Color(0xFF9C27B0),
-                        value: widget.metopograpsusSppCount.toDouble(),
-                        title:
-                            '${((widget.metopograpsusSppCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-                        radius: radius,
-                        titleStyle: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: shadows,
-                        ),
-                      );
-                    default:
-                      throw Error();
-                  }
-                }),
-              ),
-              swapAnimationDuration: const Duration(milliseconds: 300),
-              swapAnimationCurve: Curves.easeInOutQuad,
-            ),
-          ),
-        ),
+        // Pie Chart
+        pieChart(),
         const SizedBox(height: 20),
+        // Legends
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -203,11 +80,64 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
     );
   }
 
+  Widget pieChart() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: PieChart(
+          PieChartData(
+            pieTouchData: pieTouchData(),
+            borderData: FlBorderData(show: false),
+            sectionsSpace: 2,
+            centerSpaceRadius: 40,
+            sections: showingSections(),
+          ),
+          swapAnimationDuration: const Duration(milliseconds: 300),
+          swapAnimationCurve: Curves.easeInOutQuad,
+        ),
+      ),
+    );
+  }
+
+  Widget topBarTitle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.pie_chart, size: 16, color: Colors.grey[700]),
+        const SizedBox(width: 8),
+        Text(
+          'Crab Species Distribution',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
+        ),
+      ],
+    );
+  }
+
+  PieTouchData pieTouchData() {
+    return PieTouchData(
+      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+        setState(() {
+          if (!event.isInterestedForInteractions ||
+              pieTouchResponse == null ||
+              pieTouchResponse.touchedSection == null) {
+            touchedIndex = -1;
+            return;
+          }
+          touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+        });
+      },
+    );
+  }
+
   List<PieChartSectionData> showingSections() {
     return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 14.0; // Reduced from 20.0 and 16.0
-      final radius = isTouched ? 90.0 : 80.0; // Reduced from 110.0 and 100.0
+      final fontSize = isTouched ? 18.0 : 14.0;
+      final radius = isTouched ? 90.0 : 80.0;
       final shadows = [
         Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 3)
       ];
