@@ -183,19 +183,26 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         ),
 
         // first row displayed
+        const SizedBox(
+          height: 10,
+        ),
+
+// first row displayed
         Row(
           children: [
-            InfoCard(
-              image: 'lib/assets/images/loginbackground.png',
-              title: "Total Crabs",
-              value: totalCount.toString(),
-              topColor: Colors.grey,
-              isActive: activeTitle == "Total Crabs",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Total Crabs";
-                });
-              },
+            Expanded(
+              child: InfoCard(
+                image: 'lib/assets/images/loginbackground.png',
+                title: "Total Crabs",
+                value: totalCount.toString(),
+                topColor: Colors.grey,
+                isActive: activeTitle == "Total Crabs",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Total Crabs";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
@@ -210,7 +217,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                 isActive: false,
                 onTap: () {
                   // setState(() {
-                  //   activeTitle = "Total Crabs";
+                  //   activeTitle = "Unclassified";
                   // });
                 },
               ),
@@ -304,47 +311,44 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           height: 20,
         ),
 
-        Column(
+        Row(
           children: [
             // Bar Graph Container
-            Text(
-              "Total Crab count(per month):",
-              style: textStyle,
-            ),
-            Container(
-              height: 400,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(20.0),
-              child: BarGraph(
-                totalCrabs: graphData, // Pass the dynamically selected data
-                activeTitle: graphTitle,
+            Expanded(
+              flex: 3,
+              child: Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(20.0),
+                child: BarGraph(
+                  totalCrabs: graphData,
+                  activeTitle: graphTitle,
+                ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(width: 20),
 
             // Pie Chart Container
-            Text(
-              "Total Crab count(per species):",
-              style: textStyle,
-            ),
-            Container(
-              height: 400,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(20.0),
-              child: PieChartDisplay(
-                cardisomaCarnifexCount: cardisomaCarnifexCount,
-                scyllaSerrataCount: scyllaSerrataCount,
-                venitusLatreilleiCount: venitusLatreilleiCount,
-                portunosPelagicusCount: portunosPelagicusCount,
-                metopograpsusSppCount: metopograpsusSppCount,
+            Expanded(
+              flex: 2,
+              child: Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(20.0),
+                child: PieChartDisplay(
+                  metopograpsusSppCount: metopograpsusSppCount,
+                  portunosPelagicusCount: portunosPelagicusCount,
+                  cardisomaCarnifexCount: cardisomaCarnifexCount,
+                  scyllaSerrataCount: scyllaSerrataCount,
+                  venitusLatreilleiCount: venitusLatreilleiCount,
+                ),
               ),
             ),
           ],

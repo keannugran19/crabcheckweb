@@ -50,6 +50,12 @@ class BarGraph extends StatelessWidget {
         rodColorUnfilled = Colors.white;
     }
 
+    // Find maximum value to display in bar graph
+    double maxCrabCount = totalCrabs
+        .map<double>((e) => e.toDouble())
+        .reduce((curr, next) => curr > next ? curr : next);
+    double roundedMax = maxCrabCount;
+
 // data to display on bargraph
     BarData myBarData = BarData(
         januaryTotal: totalCrabs[0],
@@ -67,50 +73,124 @@ class BarGraph extends StatelessWidget {
 
     myBarData.initializeBarData();
 
-    return BarChart(
-      BarChartData(
-        maxY: 50,
-        minY: 0,
-        gridData: const FlGridData(show: false), // Remove grid
-        borderData: FlBorderData(
-          show: false, // Remove border
-        ),
-        titlesData: const FlTitlesData(
-          show: true,
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: false, // Remove left titles
-            ),
-          ),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 40,
-              getTitlesWidget: getTopBottomTitles,
-            ),
-          ),
-        ),
-        barGroups: myBarData.barData.map((data) {
-          return BarChartGroupData(
-            x: data.x,
-            barRods: [
-              BarChartRodData(
-                toY: data.y,
-                color: rodColor,
-                width: 25,
-                borderRadius: BorderRadius.circular(20),
-                backDrawRodData: BackgroundBarChartRodData(
-                  show: true,
-                  toY: 50,
-                  color: rodColorUnfilled,
-                ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.calendar_month, size: 16, color: Colors.grey[700]),
+            const SizedBox(width: 8),
+            Text(
+              'Total Crabs per Month',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
               ),
-            ],
-          );
-        }).toList(),
-      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: roundedMax,
+                minY: 0,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipRoundedRadius: 8,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${rod.toY.toInt()} crab/s\n',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: const FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: getTopBottomTitles,
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: true, interval: 5),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawHorizontalLine: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: 3,
+                  checkToShowHorizontalLine: (value) => true,
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: Colors.grey.shade400, // Darker color
+                      strokeWidth: 1.0, // Slightly thinner
+                    );
+                  },
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    left: BorderSide(
+                      color: Colors.grey.shade400,
+                      width: 2,
+                    ),
+                    bottom: BorderSide(
+                      color: Colors.grey.shade400,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                barGroups: myBarData.barData.map((data) {
+                  return BarChartGroupData(
+                    x: data.x,
+                    barRods: [
+                      BarChartRodData(
+                        toY: data.y,
+                        color: rodColor,
+                        width: 18,
+                        borderRadius: BorderRadius.circular(4),
+                        gradient: LinearGradient(
+                          colors: [
+                            rodColor ?? Colors.grey,
+                            (rodColor ?? Colors.grey).withOpacity(0.7),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                        backDrawRodData: BackgroundBarChartRodData(
+                          show: true,
+                          toY: roundedMax,
+                          color: rodColorUnfilled,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+              swapAnimationDuration: const Duration(milliseconds: 300),
+              swapAnimationCurve: Curves.easeInOutQuad,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -122,40 +202,40 @@ Widget getTopBottomTitles(double value, TitleMeta meta) {
   Widget text;
   switch (value.toInt()) {
     case 0:
-      text = const Text('January', style: style);
+      text = const Text('J', style: style);
       break;
     case 1:
-      text = const Text('February', style: style);
+      text = const Text('F', style: style);
       break;
     case 2:
-      text = const Text('March', style: style);
+      text = const Text('M', style: style);
       break;
     case 3:
-      text = const Text('April', style: style);
+      text = const Text('A', style: style);
       break;
     case 4:
-      text = const Text('May', style: style);
+      text = const Text('M', style: style);
       break;
     case 5:
-      text = const Text('June', style: style);
+      text = const Text('J', style: style);
       break;
     case 6:
-      text = const Text('July', style: style);
+      text = const Text('J', style: style);
       break;
     case 7:
-      text = const Text('August', style: style);
+      text = const Text('A', style: style);
       break;
     case 8:
-      text = const Text('September', style: style);
+      text = const Text('S', style: style);
       break;
     case 9:
-      text = const Text('October', style: style);
+      text = const Text('O', style: style);
       break;
     case 10:
-      text = const Text('November', style: style);
+      text = const Text('N', style: style);
       break;
     case 11:
-      text = const Text('December', style: style);
+      text = const Text('D', style: style);
       break;
     default:
       text = const Text('', style: style);
