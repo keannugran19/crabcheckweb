@@ -1,3 +1,4 @@
+import 'package:crabcheckweb1/pages/dashboard/pieChart/badge.dart';
 import 'package:crabcheckweb1/pages/dashboard/pieChart/indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -33,49 +34,49 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         const SizedBox(height: 20),
         // Pie Chart
         pieChart(),
-        const SizedBox(height: 20),
+        // const SizedBox(height: 20),
         // Legends
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Indicator(
-              color: const Color(0xFFFF9800),
-              text: 'C. Carnifex',
-              isSquare: false,
-              size: touchedIndex == 0 ? 18 : 16,
-            ),
-            Indicator(
-              color: const Color(0xFF795548),
-              text: 'S. Serrata',
-              isSquare: false,
-              size: touchedIndex == 1 ? 18 : 16,
-            ),
-            Indicator(
-              color: const Color(0xFFFDD835),
-              text: 'V. Latreillei',
-              isSquare: false,
-              size: touchedIndex == 2 ? 18 : 16,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Indicator(
-              color: const Color(0xFF2196F3),
-              text: 'P. Pelagicus',
-              isSquare: false,
-              size: touchedIndex == 3 ? 18 : 16,
-            ),
-            Indicator(
-              color: const Color(0xFF9C27B0),
-              text: 'M. Spp',
-              isSquare: false,
-              size: touchedIndex == 4 ? 18 : 16,
-            ),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     Indicator(
+        //       color: const Color(0xFFFF9800),
+        //       text: 'C. Carnifex',
+        //       isSquare: false,
+        //       size: touchedIndex == 0 ? 18 : 16,
+        //     ),
+        //     Indicator(
+        //       color: const Color(0xFF795548),
+        //       text: 'S. Serrata',
+        //       isSquare: false,
+        //       size: touchedIndex == 1 ? 18 : 16,
+        //     ),
+        //     Indicator(
+        //       color: const Color(0xFFFDD835),
+        //       text: 'V. Latreillei',
+        //       isSquare: false,
+        //       size: touchedIndex == 2 ? 18 : 16,
+        //     ),
+        //   ],
+        // ),
+        // const SizedBox(height: 8),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     Indicator(
+        //       color: const Color(0xFF2196F3),
+        //       text: 'P. Pelagicus',
+        //       isSquare: false,
+        //       size: touchedIndex == 3 ? 18 : 16,
+        //     ),
+        //     Indicator(
+        //       color: const Color(0xFF9C27B0),
+        //       text: 'M. Spp',
+        //       isSquare: false,
+        //       size: touchedIndex == 4 ? 18 : 16,
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
@@ -89,11 +90,11 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
             pieTouchData: pieTouchData(),
             borderData: FlBorderData(show: false),
             sectionsSpace: 2,
-            centerSpaceRadius: 40,
+            centerSpaceRadius: 50,
             sections: showingSections(),
           ),
-          swapAnimationDuration: const Duration(milliseconds: 300),
-          swapAnimationCurve: Curves.easeInOutQuad,
+          swapAnimationDuration: const Duration(milliseconds: 150),
+          swapAnimationCurve: Curves.easeInOut,
         ),
       ),
     );
@@ -136,14 +137,17 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   List<PieChartSectionData> showingSections() {
     return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 14.0;
-      final radius = isTouched ? 90.0 : 80.0;
+      final fontSize = isTouched ? 18.0 : 16.0; // Increased font sizes
+      final radius = isTouched ? 115.0 : 110.0;
       final shadows = [
-        Shadow(color: Colors.black.withOpacity(0.3), blurRadius: 3)
+        Shadow(color: Colors.black.withOpacity(0.2), blurRadius: 2)
       ];
       switch (i) {
         case 0:
           return PieChartSectionData(
+            badgeWidget: const PieBadge(
+                imgAsset: 'lib/assets/images/crabs/cardisomaCarnifex.jpg'),
+            badgePositionPercentageOffset: 1,
             color: const Color(0xFFFF9800),
             value: widget.cardisomaCarnifexCount.toDouble(),
             title:
@@ -158,6 +162,9 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           );
         case 1:
           return PieChartSectionData(
+            badgeWidget: const PieBadge(
+                imgAsset: 'lib/assets/images/crabs/scyllaSerrata.jpg'),
+            badgePositionPercentageOffset: 1,
             color: const Color(0xFF795548),
             value: widget.scyllaSerrataCount.toDouble(),
             title:
@@ -172,6 +179,9 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           );
         case 2:
           return PieChartSectionData(
+            badgeWidget: const PieBadge(
+                imgAsset: 'lib/assets/images/crabs/venitusLatreillei.jpeg'),
+            badgePositionPercentageOffset: 1,
             color: const Color(0xFFFDD835),
             value: widget.venitusLatreilleiCount.toDouble(),
             title:
@@ -186,6 +196,9 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           );
         case 3:
           return PieChartSectionData(
+            badgeWidget: const PieBadge(
+                imgAsset: 'lib/assets/images/crabs/portunosPelagicus.jpg'),
+            badgePositionPercentageOffset: 1,
             color: const Color(0xFF2196F3),
             value: widget.portunosPelagicusCount.toDouble(),
             title:
@@ -200,6 +213,9 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           );
         case 4:
           return PieChartSectionData(
+            badgeWidget: const PieBadge(
+                imgAsset: 'lib/assets/images/crabs/metopograpsusSp.jpeg'),
+            badgePositionPercentageOffset: 1,
             color: const Color(0xFF9C27B0),
             value: widget.metopograpsusSppCount.toDouble(),
             title:
