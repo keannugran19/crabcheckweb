@@ -1,5 +1,6 @@
 import 'dart:developer' as devtools;
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/constants/theme_data.dart';
 import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/widgets/custom_menu_controller.dart'
@@ -53,11 +54,7 @@ class _CrabCheckWebState extends State<CrabCheckWeb> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Crabcheck Dashboard",
-        theme: ThemeData(
-            scaffoldBackgroundColor: colorScheme.surface,
-            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-                .apply(bodyColor: colorScheme.onSurface),
-            primaryColor: colorScheme.primary),
+        theme: ThemeClass.theme,
         navigatorKey: navigatorKey,
         home: const AuthenticationPage());
   }
