@@ -207,9 +207,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
             ),
             ElevatedButton(
                 onPressed: restart,
-                child: Icon(
+                child: const Icon(
                   Icons.restart_alt,
-                  color: colorScheme.primary,
+                  color: backgroundColor,
                 )),
           ],
         ),
