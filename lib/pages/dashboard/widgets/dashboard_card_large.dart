@@ -18,6 +18,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   // initiate firestore
   final FirestoreService firestoreService = FirestoreService();
 
+  // selected year
+  String selectedYear = '2024';
+
 // Monthly counts for each species
   List<double> totalCrabs = List<double>.filled(12, 0);
   List<double> cardisomaCarnifex = List<double>.filled(12, 0);
@@ -41,17 +44,23 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchAllCounts();
-    fetchCrabData();
+    selectedYear = '2024';
+    fetchAllCounts(selectedYear);
+    fetchCrabData(selectedYear);
   }
 
-  Future<void> fetchAllCounts() async {
+  Future<void> fetchAllCounts(String selectedYear) async {
     Map<String, Future<int>> countFutures = {
-      'Cardisoma Carnifex': firestoreService.fetchCount('Cardisoma Carnifex'),
-      'Scylla Serrata': firestoreService.fetchCount('Scylla Serrata'),
-      'Venitus Latreillei': firestoreService.fetchCount('Venitus Latreillei'),
-      'Portunos Pelagicus': firestoreService.fetchCount('Portunos Pelagicus'),
-      'Metopograpsus Spp': firestoreService.fetchCount('Metopograpsus Spp'),
+      'Cardisoma Carnifex':
+          firestoreService.fetchCount('Cardisoma Carnifex', selectedYear),
+      'Scylla Serrata':
+          firestoreService.fetchCount('Scylla Serrata', selectedYear),
+      'Venitus Latreillei':
+          firestoreService.fetchCount('Venitus Latreillei', selectedYear),
+      'Portunos Pelagicus':
+          firestoreService.fetchCount('Portunos Pelagicus', selectedYear),
+      'Metopograpsus Spp':
+          firestoreService.fetchCount('Metopograpsus Spp', selectedYear),
       'Unclassified': firestoreService.fetchReportCount(),
     };
 
@@ -65,13 +74,17 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       venitusLatreilleiCount = counts['Venitus Latreillei'] ?? 0;
       portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
       metopograpsusSppCount = counts['Metopograpsus Spp'] ?? 0;
-      totalCount = counts.values.fold(0, (a, b) => a + b);
+      totalCount = cardisomaCarnifexCount +
+          scyllaSerrataCount +
+          venitusLatreilleiCount +
+          portunosPelagicusCount +
+          metopograpsusSppCount;
       unclassifiedCount = counts['Unclassified'] ?? 0;
     });
   }
 
-  Future<void> fetchCrabData() async {
-    final documents = await firestoreService.fetchCrabData();
+  Future<void> fetchCrabData(String selectedYear) async {
+    final documents = await firestoreService.fetchCrabDataForYear(selectedYear);
     processCrabData(documents);
   }
 
@@ -129,8 +142,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 // Restart the dashboard state
   void restart() {
     setState(() => isLoading = true);
-    fetchAllCounts();
-    fetchCrabData();
+    selectedYear = selectedYear;
+    fetchAllCounts(selectedYear);
+    fetchCrabData(selectedYear);
   }
 
   @override
@@ -140,8 +154,12 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     late List<double> graphData;
     late String graphTitle;
 
-    // widget style
-    var textStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+    // reusable widgets
+    var containerBoxDecoration = BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(10),
+    );
+
     // Determine which data to display based on the selected title
     if (activeTitle.contains('Cardisoma Carnifex')) {
       graphTitle = 'Cardisoma Carnifex';
@@ -168,50 +186,69 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     return Column(
       children: [
         // Page restart button
-        Align(
-          alignment: Alignment.topRight,
-          child: ElevatedButton(
-              onPressed: restart,
-              child: Icon(
-                Icons.restart_alt,
-                color: colorScheme.primary,
-              )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            DropdownButton<String>(
+              value: selectedYear,
+              items: ['2024', '2025', '2026'].map((String year) {
+                return DropdownMenuItem<String>(
+                  value: year,
+                  child: Text(year),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedYear = newValue!;
+                  fetchCrabData(selectedYear);
+                  fetchAllCounts(selectedYear);
+                });
+              },
+            ),
+            ElevatedButton(
+                onPressed: restart,
+                child: const Icon(
+                  Icons.restart_alt,
+                  color: backgroundColor,
+                )),
+          ],
         ),
 
         const SizedBox(
           height: 10,
         ),
 
-        // first row displayed
+// first row displayed
         Row(
           children: [
-            InfoCard(
-              image: 'lib/assets/images/loginbackground.png',
-              title: "Total Crabs",
-              value: totalCount.toString(),
-              topColor: Colors.grey,
-              isActive: activeTitle == "Total Crabs",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Total Crabs";
-                });
-              },
+            Expanded(
+              flex: 4,
+              child: InfoCard(
+                image: 'lib/assets/images/loginbackground.png',
+                title: "Total Crabs",
+                value: totalCount,
+                topColor: Colors.grey,
+                isActive: activeTitle == "Total Crabs",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Total Crabs";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
             ),
-            SizedBox(
-              width: width / 4,
+            Expanded(
+              flex: 2,
               child: InfoCard(
                 image: 'lib/assets/images/unclassified.jpg',
                 title: "Unclassified",
-                value: unclassifiedCount.toString(),
+                value: unclassifiedCount,
                 topColor: Colors.red,
                 isActive: false,
                 onTap: () {
-                  // setState(() {
-                  //   activeTitle = "Total Crabs";
-                  // });
+                  // Handle tap
                 },
               ),
             ),
@@ -225,77 +262,92 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
         //* second row displayed
         Row(
           children: [
-            InfoCard(
-              image: 'lib/assets/images/crabs/cardisomaCarnifex.jpg',
-              title: "Cardisoma Carnifex",
-              value: cardisomaCarnifexCount.toString(),
-              topColor: Colors.orange,
-              isActive: activeTitle == "Cardisoma Carnifex",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Cardisoma Carnifex";
-                });
-              },
+            Expanded(
+              flex: 1,
+              child: InfoCard(
+                image: 'lib/assets/images/crabs/cardisomaCarnifex.jpg',
+                title: "Cardisoma Carnifex",
+                value: cardisomaCarnifexCount,
+                topColor: Colors.orange,
+                isActive: activeTitle == "Cardisoma Carnifex",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Cardisoma Carnifex";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              image: 'lib/assets/images/crabs/scyllaSerrata.jpg',
-              title: "Scylla Serrata",
-              value: scyllaSerrataCount.toString(),
-              topColor: Colors.brown,
-              isActive: activeTitle == "Scylla Serrata",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Scylla Serrata";
-                });
-              },
+            Expanded(
+              flex: 1,
+              child: InfoCard(
+                image: 'lib/assets/images/crabs/scyllaSerrata.jpg',
+                title: "Scylla Serrata",
+                value: scyllaSerrataCount,
+                topColor: Colors.brown,
+                isActive: activeTitle == "Scylla Serrata",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Scylla Serrata";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              image: 'lib/assets/images/crabs/portunosPelagicus.jpg',
-              title: "Portunos Pelagicus",
-              value: portunosPelagicusCount.toString(),
-              topColor: Colors.blue,
-              isActive: activeTitle == "Portunos Pelagicus",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Portunos Pelagicus";
-                });
-              },
+            Expanded(
+              flex: 1,
+              child: InfoCard(
+                image: 'lib/assets/images/crabs/portunosPelagicus.jpg',
+                title: "Portunos Pelagicus",
+                value: portunosPelagicusCount,
+                topColor: Colors.blue,
+                isActive: activeTitle == "Portunos Pelagicus",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Portunos Pelagicus";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              image: 'lib/assets/images/crabs/venitusLatreillei.jpeg',
-              title: "Venitus Latreillei",
-              value: venitusLatreilleiCount.toString(),
-              topColor: Colors.yellow,
-              isActive: activeTitle == "Venitus Latreillei",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Venitus Latreillei";
-                });
-              },
+            Expanded(
+              flex: 1,
+              child: InfoCard(
+                image: 'lib/assets/images/crabs/venitusLatreillei.jpeg',
+                title: "Venitus Latreillei",
+                value: venitusLatreilleiCount,
+                topColor: Colors.yellow,
+                isActive: activeTitle == "Venitus Latreillei",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Venitus Latreillei";
+                  });
+                },
+              ),
             ),
             SizedBox(
               width: width / 64,
             ),
-            InfoCard(
-              image: 'lib/assets/images/crabs/metopograpsusSp.jpeg',
-              title: "Metopograpsus Spp",
-              value: metopograpsusSppCount.toString(),
-              topColor: Colors.purple,
-              isActive: activeTitle == "Metopograpsus Spp",
-              onTap: () {
-                setState(() {
-                  activeTitle = "Metopograpsus Spp";
-                });
-              },
+            Expanded(
+              flex: 1,
+              child: InfoCard(
+                image: 'lib/assets/images/crabs/metopograpsusSp.jpeg',
+                title: "Metopograpsus Spp",
+                value: metopograpsusSppCount,
+                topColor: Colors.purple,
+                isActive: activeTitle == "Metopograpsus Spp",
+                onTap: () {
+                  setState(() {
+                    activeTitle = "Metopograpsus Spp";
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -304,47 +356,38 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           height: 20,
         ),
 
-        Column(
+        Row(
           children: [
             // Bar Graph Container
-            Text(
-              "Total Crab count(per month):",
-              style: textStyle,
-            ),
-            Container(
-              height: 400,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(20.0),
-              child: BarGraph(
-                totalCrabs: graphData, // Pass the dynamically selected data
-                activeTitle: graphTitle,
+            Expanded(
+              flex: 3,
+              child: Container(
+                height: 400,
+                decoration: containerBoxDecoration,
+                padding: const EdgeInsets.all(20.0),
+                child: BarGraph(
+                  totalCrabs: graphData,
+                  activeTitle: graphTitle,
+                ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(width: 20),
 
             // Pie Chart Container
-            Text(
-              "Total Crab count(per species):",
-              style: textStyle,
-            ),
-            Container(
-              height: 400,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(20.0),
-              child: PieChartDisplay(
-                cardisomaCarnifexCount: cardisomaCarnifexCount,
-                scyllaSerrataCount: scyllaSerrataCount,
-                venitusLatreilleiCount: venitusLatreilleiCount,
-                portunosPelagicusCount: portunosPelagicusCount,
-                metopograpsusSppCount: metopograpsusSppCount,
+            Expanded(
+              flex: 2,
+              child: Container(
+                height: 400,
+                decoration: containerBoxDecoration,
+                padding: const EdgeInsets.all(20.0),
+                child: PieChartDisplay(
+                  metopograpsusSppCount: metopograpsusSppCount,
+                  portunosPelagicusCount: portunosPelagicusCount,
+                  cardisomaCarnifexCount: cardisomaCarnifexCount,
+                  scyllaSerrataCount: scyllaSerrataCount,
+                  venitusLatreilleiCount: venitusLatreilleiCount,
+                ),
               ),
             ),
           ],

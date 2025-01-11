@@ -9,32 +9,36 @@ class FirestoreService {
   final crabs = FirebaseFirestore.instance.collection('crabData');
   final reports = FirebaseFirestore.instance.collection('userReports');
 
-  // query of getting count data from the database
-  Future<int> fetchCount(String species) async {
-    final query = crabs.where('species', isEqualTo: species);
-    final snapshot = await query.count().get();
-    return snapshot.count!;
+  // fetch crab data for a specific year
+  Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {
+    DateTime startOfYear = DateTime(int.parse(year), 1, 1);
+    DateTime endOfYear = DateTime(int.parse(year), 12, 31, 23, 59, 59);
+
+    QuerySnapshot snapshot = await crabs
+        .where('timestamp', isGreaterThanOrEqualTo: startOfYear)
+        .where('timestamp', isLessThanOrEqualTo: endOfYear)
+        .get();
+
+    return snapshot.docs;
+  }
+
+  // fetch crab count per species per year
+  Future<int> fetchCount(String species, String selectedYear) async {
+    DateTime startOfYear = DateTime(int.parse(selectedYear), 1, 1);
+    DateTime endOfYear = DateTime(int.parse(selectedYear), 12, 31, 23, 59, 59);
+
+    final query = crabs
+        .where('species', isEqualTo: species)
+        .where('timestamp', isGreaterThanOrEqualTo: startOfYear)
+        .where('timestamp', isLessThanOrEqualTo: endOfYear);
+
+    final snapshot = await query.get();
+    return snapshot.size;
   }
 
   // read data from firestore to reports table
   Stream<QuerySnapshot> getData() {
     return crabs.orderBy('timestamp', descending: true).snapshots();
-  }
-
-  // Fetch count for a specific species
-  Future<int> fetchCountGraph(String species) async {
-    QuerySnapshot snapshot = await db
-        .collection('speciesCounts')
-        .where('species', isEqualTo: species)
-        .get();
-
-    return snapshot.docs.length;
-  }
-
-  // Fetch crab data
-  Future<List<QueryDocumentSnapshot>> fetchCrabData() async {
-    QuerySnapshot snapshot = await crabs.get();
-    return snapshot.docs;
   }
 
   // filter data by year on reports table
@@ -68,17 +72,4 @@ class FirestoreService {
     final snapshot = await query.count().get();
     return snapshot.count!;
   }
-  // filter crabs by species
-
-  // Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {
-  //   DateTime startOfYear = DateTime(int.parse(year), 1, 1);
-  //   DateTime endOfYear = DateTime(int.parse(year), 12, 31, 23, 59, 59);
-
-  //   QuerySnapshot snapshot = await crabs
-  //       .where('timestamp', isGreaterThanOrEqualTo: startOfYear)
-  //       .where('timestamp', isLessThanOrEqualTo: endOfYear)
-  //       .get();
-
-  //   return snapshot.docs;
-  // }
 }

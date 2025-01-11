@@ -15,7 +15,7 @@ class CrabMapWidget extends StatefulWidget {
     'Cardisoma Carnifex': "lib/assets/images/orange.png",
     'Venitus Latreillei': "lib/assets/images/yellow.png",
     'Scylla Serrata': "lib/assets/images/brown.png",
-    'Portunos Pelagicus': "lib/assets/images/darkgray.png",
+    'Portunos Pelagicus': "lib/assets/images/blue.png",
     'Metopograpsus Spp': "lib/assets/images/purple.png",
   };
 
