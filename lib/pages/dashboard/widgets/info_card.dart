@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class InfoCard extends StatelessWidget {
   final String image;
   final String title;
-  final String value;
+  final int value;
   final Color topColor;
   final bool isActive;
   final Function() onTap;
@@ -62,7 +62,7 @@ class InfoCard extends StatelessWidget {
                           color:
                               isActive ? colorScheme.primary : Colors.white)),
                   TextSpan(
-                      text: value,
+                      text: value.toString(),
                       style: TextStyle(
                           fontSize: 40,
                           color:
