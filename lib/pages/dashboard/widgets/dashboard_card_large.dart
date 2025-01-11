@@ -74,7 +74,11 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
       venitusLatreilleiCount = counts['Venitus Latreillei'] ?? 0;
       portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
       metopograpsusSppCount = counts['Metopograpsus Spp'] ?? 0;
-      totalCount = counts.values.fold(0, (a, b) => a + b);
+      totalCount = cardisomaCarnifexCount +
+          scyllaSerrataCount +
+          venitusLatreilleiCount +
+          portunosPelagicusCount +
+          metopograpsusSppCount;
       unclassifiedCount = counts['Unclassified'] ?? 0;
     });
   }
@@ -222,7 +226,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/loginbackground.png',
                 title: "Total Crabs",
-                value: totalCount.toString(),
+                value: totalCount,
                 topColor: Colors.grey,
                 isActive: activeTitle == "Total Crabs",
                 onTap: () {
@@ -240,7 +244,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/unclassified.jpg',
                 title: "Unclassified",
-                value: unclassifiedCount.toString(),
+                value: unclassifiedCount,
                 topColor: Colors.red,
                 isActive: false,
                 onTap: () {
@@ -263,7 +267,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/crabs/cardisomaCarnifex.jpg',
                 title: "Cardisoma Carnifex",
-                value: cardisomaCarnifexCount.toString(),
+                value: cardisomaCarnifexCount,
                 topColor: Colors.orange,
                 isActive: activeTitle == "Cardisoma Carnifex",
                 onTap: () {
@@ -281,7 +285,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/crabs/scyllaSerrata.jpg',
                 title: "Scylla Serrata",
-                value: scyllaSerrataCount.toString(),
+                value: scyllaSerrataCount,
                 topColor: Colors.brown,
                 isActive: activeTitle == "Scylla Serrata",
                 onTap: () {
@@ -299,7 +303,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/crabs/portunosPelagicus.jpg',
                 title: "Portunos Pelagicus",
-                value: portunosPelagicusCount.toString(),
+                value: portunosPelagicusCount,
                 topColor: Colors.blue,
                 isActive: activeTitle == "Portunos Pelagicus",
                 onTap: () {
@@ -317,7 +321,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/crabs/venitusLatreillei.jpeg',
                 title: "Venitus Latreillei",
-                value: venitusLatreilleiCount.toString(),
+                value: venitusLatreilleiCount,
                 topColor: Colors.yellow,
                 isActive: activeTitle == "Venitus Latreillei",
                 onTap: () {
@@ -335,7 +339,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               child: InfoCard(
                 image: 'lib/assets/images/crabs/metopograpsusSp.jpeg',
                 title: "Metopograpsus Spp",
-                value: metopograpsusSppCount.toString(),
+                value: metopograpsusSppCount,
                 topColor: Colors.purple,
                 isActive: activeTitle == "Metopograpsus Spp",
                 onTap: () {
