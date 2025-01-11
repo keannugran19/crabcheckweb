@@ -1,6 +1,9 @@
 import 'package:crabcheckweb1/pages/dashboard/barGraph/bar_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../constants/colors.dart';
 
 class BarGraph extends StatelessWidget {
   final List totalCrabs;
@@ -80,57 +83,76 @@ class BarGraph extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(5),
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: roundedMax,
-                minY: 0,
-                barTouchData: barTouchData(),
-                titlesData: titlesData(),
-                gridData: gridData(),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border(
-                    left: BorderSide(
-                      color: Colors.grey.shade400,
-                      width: 2,
-                    ),
-                    bottom: BorderSide(
-                      color: Colors.grey.shade400,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                barGroups: myBarData.barData.map((data) {
-                  return BarChartGroupData(
-                    x: data.x,
-                    barRods: [
-                      BarChartRodData(
-                        toY: data.y,
-                        color: rodColor,
-                        width: 18,
-                        borderRadius: BorderRadius.circular(4),
-                        gradient: LinearGradient(
-                          colors: [
-                            rodColor ?? Colors.grey,
-                            (rodColor ?? Colors.grey).withOpacity(0.7),
-                          ],
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                        ),
-                        backDrawRodData: BackgroundBarChartRodData(
-                          show: true,
-                          toY: roundedMax,
-                          color: rodColorUnfilled,
+            child: maxCrabCount == 0
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'lib/assets/svg/empty-data.svg',
+                        height: 200,
+                        width: 200,
+                      ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        "Empty Data",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  )
+                : BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      maxY: roundedMax,
+                      minY: 0,
+                      barTouchData: barTouchData(),
+                      titlesData: titlesData(),
+                      gridData: gridData(),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border(
+                          left: BorderSide(
+                            color: Colors.grey.shade400,
+                            width: 2,
+                          ),
+                          bottom: BorderSide(
+                            color: Colors.grey.shade400,
+                            width: 2,
+                          ),
                         ),
                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
-              swapAnimationDuration: const Duration(milliseconds: 300),
-              swapAnimationCurve: Curves.easeInOutQuad,
-            ),
+                      barGroups: myBarData.barData.map((data) {
+                        return BarChartGroupData(
+                          x: data.x,
+                          barRods: [
+                            BarChartRodData(
+                              toY: data.y,
+                              color: rodColor,
+                              width: 18,
+                              borderRadius: BorderRadius.circular(4),
+                              gradient: LinearGradient(
+                                colors: [
+                                  rodColor ?? Colors.grey,
+                                  (rodColor ?? Colors.grey).withOpacity(0.7),
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                              backDrawRodData: BackgroundBarChartRodData(
+                                show: true,
+                                toY: roundedMax,
+                                color: rodColorUnfilled,
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    swapAnimationDuration: const Duration(milliseconds: 300),
+                    swapAnimationCurve: Curves.easeInOutQuad,
+                  ),
           ),
         ),
       ],

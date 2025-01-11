@@ -150,6 +150,12 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     late List<double> graphData;
     late String graphTitle;
 
+    // reusable widgets
+    var containerBoxDecoration = BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(10),
+    );
+
     // Determine which data to display based on the selected title
     if (activeTitle.contains('Cardisoma Carnifex')) {
       graphTitle = 'Cardisoma Carnifex';
@@ -353,10 +359,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               flex: 3,
               child: Container(
                 height: 400,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: containerBoxDecoration,
                 padding: const EdgeInsets.all(20.0),
                 child: BarGraph(
                   totalCrabs: graphData,
@@ -372,10 +375,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
               flex: 2,
               child: Container(
                 height: 400,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: containerBoxDecoration,
                 padding: const EdgeInsets.all(20.0),
                 child: PieChartDisplay(
                   metopograpsusSppCount: metopograpsusSppCount,

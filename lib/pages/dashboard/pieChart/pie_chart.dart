@@ -1,6 +1,8 @@
+import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/pieChart/badge.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PieChartDisplay extends StatefulWidget {
   final int cardisomaCarnifexCount;
@@ -27,12 +29,44 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    // total count of crabs for error handling
+    int totalCount = widget.cardisomaCarnifexCount +
+        widget.scyllaSerrataCount +
+        widget.venitusLatreilleiCount +
+        widget.portunosPelagicusCount +
+        widget.metopograpsusSppCount;
+
     return Column(
       children: [
         topBarTitle(),
         const SizedBox(height: 20),
         // Pie Chart
-        pieChart(),
+        totalCount == 0
+            ? Expanded(
+                child: Stack(children: [
+                  Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'lib/assets/svg/empty-data.svg',
+                            height: 200,
+                            width: 200,
+                          ),
+                          const SizedBox(height: 15),
+                          const Text(
+                            "Empty Data",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      )),
+                ]),
+              )
+            : pieChart()
         // const SizedBox(height: 20),
         // Legends
         // Row(
