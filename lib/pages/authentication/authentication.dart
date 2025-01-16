@@ -1,9 +1,11 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, deprecated_member_use
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
 import 'package:crabcheckweb1/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools;
+
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});
@@ -115,6 +117,16 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       _isEditingEmail = false;
       _isEditingPassword = false;
     });
+  }
+
+  void redirect() async {
+    const url =
+        'https://mail.google.com/mail/?view=cm&fs=1&to=main.grankeannu@gmail.com';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -249,13 +261,19 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                RichText(
-                    text: TextSpan(children: [
-                  const TextSpan(text: "Do not have admin credentials? "),
-                  TextSpan(
-                      text: "Request IT Support! ",
-                      style: TextStyle(color: colorScheme.primary))
-                ]))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Don't have admin credentials?",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    TextButton(
+                        onPressed: redirect,
+                        child: const Text("Request IT Support",
+                            style: TextStyle(fontSize: 12)))
+                  ],
+                )
               ],
             ),
           ),
