@@ -65,6 +65,58 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     super.initState();
   }
 
+  Future<void> _login() async {
+    setState(() {
+      _isLogginIn = true;
+      textFocusNodeEmail.unfocus();
+      textFocusNodePassword.unfocus();
+    });
+
+    if (_validateEmail(textControllerEmail.text) == null &&
+        _validatePassword(textControllerPassword.text) == null) {
+      await signInWithEmailPassword(
+              textControllerEmail.text, textControllerPassword.text)
+          .then((result) {
+        if (result != null) {
+          devtools.log(result.toString());
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              fullscreenDialog: true,
+              builder: (context) => HomePage(),
+            ),
+          );
+
+          setState(() {
+            loginStatus = 'You have successfully logged in';
+            _errorMessage = null;
+          });
+        } else {
+          setState(() {
+            _errorMessage = 'Incorrect email or password';
+          });
+        }
+      }).catchError((error) {
+        devtools.log('Login Error: $error');
+        setState(() {
+          loginStatus = 'Error occurred while logging in';
+        });
+      });
+    } else {
+      setState(() {
+        loginStatus = 'Please enter email & password';
+      });
+    }
+
+    setState(() {
+      _isLogginIn = false;
+      textControllerEmail.text = '';
+      textControllerPassword.text = '';
+      _isEditingEmail = false;
+      _isEditingPassword = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +202,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                   },
                   onSubmitted: (value) {
                     textFocusNodePassword.unfocus();
-                    FocusScope.of(context).requestFocus(textFocusNodePassword);
+                    _login();
                   },
                   decoration: InputDecoration(
                       labelText: "Password",
@@ -175,59 +227,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () async {
-                        setState(() {
-                          _isLogginIn = true;
-                          textFocusNodeEmail.unfocus();
-                          textFocusNodePassword.unfocus();
-                        });
-
-                        if (_validateEmail(textControllerEmail.text) == null &&
-                            _validatePassword(textControllerPassword.text) ==
-                                null) {
-                          await signInWithEmailPassword(
-                                  textControllerEmail.text,
-                                  textControllerPassword.text)
-                              .then((result) {
-                            if (result != null) {
-                              devtools.log(result.toString());
-
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  fullscreenDialog: true,
-                                  builder: (context) => HomePage(),
-                                ),
-                              );
-
-                              setState(() {
-                                loginStatus = 'You have successfully logged in';
-                                _errorMessage = null;
-                              });
-                            } else {
-                              setState(() {
-                                _errorMessage = 'Incorrect email or password';
-                              });
-                            }
-                          }).catchError((error) {
-                            devtools.log('Login Error: $error');
-                            setState(() {
-                              loginStatus = 'Error occurred while logging in';
-                            });
-                          });
-                        } else {
-                          setState(() {
-                            loginStatus = 'Please enter email & password';
-                          });
-                        }
-
-                        setState(() {
-                          _isLogginIn = false;
-                          textControllerEmail.text = '';
-                          textControllerPassword.text = '';
-                          _isEditingEmail = false;
-                          _isEditingPassword = false;
-                        });
-                      },
+                      onTap: _login,
                       child: const SizedBox(
                         width: double
                             .maxFinite, // This makes the button expand to the max width
