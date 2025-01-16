@@ -1,5 +1,4 @@
 import 'dart:developer' as devtools;
-import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/constants/theme_data.dart';
 import 'package:crabcheckweb1/pages/authentication/authentication.dart';
 import 'package:crabcheckweb1/pages/authentication/firebase_auth.dart';
@@ -10,7 +9,6 @@ import 'package:crabcheckweb1/constants/navigation_controller.dart'
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 
 void main() async {
