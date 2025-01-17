@@ -1,5 +1,6 @@
 import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:crabcheckweb1/pages/dashboard/pieChart/badge.dart';
+import 'package:crabcheckweb1/pages/dashboard/pieChart/indicator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -66,50 +67,50 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
                       )),
                 ]),
               )
-            : pieChart()
-        // const SizedBox(height: 20),
+            : pieChart(),
+        const SizedBox(height: 20),
         // Legends
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     Indicator(
-        //       color: const Color(0xFFFF9800),
-        //       text: 'C. Carnifex',
-        //       isSquare: false,
-        //       size: touchedIndex == 0 ? 18 : 16,
-        //     ),
-        //     Indicator(
-        //       color: const Color(0xFF795548),
-        //       text: 'S. Serrata',
-        //       isSquare: false,
-        //       size: touchedIndex == 1 ? 18 : 16,
-        //     ),
-        //     Indicator(
-        //       color: const Color(0xFFFDD835),
-        //       text: 'V. Latreillei',
-        //       isSquare: false,
-        //       size: touchedIndex == 2 ? 18 : 16,
-        //     ),
-        //   ],
-        // ),
-        // const SizedBox(height: 8),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     Indicator(
-        //       color: const Color(0xFF2196F3),
-        //       text: 'P. Pelagicus',
-        //       isSquare: false,
-        //       size: touchedIndex == 3 ? 18 : 16,
-        //     ),
-        //     Indicator(
-        //       color: const Color(0xFF9C27B0),
-        //       text: 'M. Spp',
-        //       isSquare: false,
-        //       size: touchedIndex == 4 ? 18 : 16,
-        //     ),
-        //   ],
-        // ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Indicator(
+              color: Color(0xFFFF9800),
+              text: 'C. Carnifex',
+              isSquare: false,
+              size: 14,
+            ),
+            Indicator(
+              color: Color(0xFF795548),
+              text: 'S. Serrata',
+              isSquare: false,
+              size: 14,
+            ),
+            Indicator(
+              color: Color(0xFFFDD835),
+              text: 'V. Latreillei',
+              isSquare: false,
+              size: 14,
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Indicator(
+              color: Color(0xFF2196F3),
+              text: 'P. Pelagicus',
+              isSquare: false,
+              size: 14,
+            ),
+            Indicator(
+              color: Color(0xFF9C27B0),
+              text: 'Metopograpsus S.',
+              isSquare: false,
+              size: 14,
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -123,7 +124,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
             pieTouchData: pieTouchData(),
             borderData: FlBorderData(show: false),
             sectionsSpace: 2,
-            centerSpaceRadius: 50,
+            centerSpaceRadius: 35,
             sections: showingSections(),
           ),
           swapAnimationDuration: const Duration(milliseconds: 150),
@@ -170,8 +171,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   List<PieChartSectionData> showingSections() {
     return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 16.0; // Increased font sizes
-      final radius = isTouched ? 115.0 : 110.0;
+      final fontSize = isTouched ? 18.0 : 15.0; // Increased font sizes
+      final radius = isTouched ? 102.0 : 98.0;
       final shadows = [
         Shadow(color: Colors.black.withOpacity(0.2), blurRadius: 2)
       ];
