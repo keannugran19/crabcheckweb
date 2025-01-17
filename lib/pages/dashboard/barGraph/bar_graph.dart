@@ -21,36 +21,28 @@ class BarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     // switch statement for changing colors of bar rod
     Color? rodColor;
-    Color? rodColorUnfilled;
 
     switch (activeTitle) {
       case 'Cardisoma Carnifex':
         rodColor = Colors.orange;
-        rodColorUnfilled = Colors.orange[200];
         break;
       case 'Scylla Serrata':
         rodColor = Colors.brown;
-        rodColorUnfilled = Colors.brown[200];
         break;
       case 'Venitus Latreillei':
         rodColor = Colors.yellow;
-        rodColorUnfilled = Colors.yellow[200];
         break;
       case 'Portunos Pelagicus':
         rodColor = Colors.blue;
-        rodColorUnfilled = Colors.blue[200];
         break;
       case 'Metopograpsus Spp':
         rodColor = Colors.purple;
-        rodColorUnfilled = Colors.purple[200];
         break;
       case 'Total Crabs':
         rodColor = Colors.grey;
-        rodColorUnfilled = Colors.white;
         break;
       default:
         rodColor = Colors.grey;
-        rodColorUnfilled = Colors.white;
     }
 
     // Find maximum value to display in bar graph
@@ -143,7 +135,7 @@ class BarGraph extends StatelessWidget {
                               backDrawRodData: BackgroundBarChartRodData(
                                 show: true,
                                 toY: roundedMax,
-                                color: rodColorUnfilled,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -235,45 +227,45 @@ FlGridData gridData() {
 
 Widget getTopBottomTitles(double value, TitleMeta meta) {
   const style = TextStyle(
-      fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black54);
+      fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black54);
 
   Widget text;
   switch (value.toInt()) {
     case 0:
-      text = const Text('J', style: style);
+      text = const Text('Jan', style: style);
       break;
     case 1:
-      text = const Text('F', style: style);
+      text = const Text('Feb', style: style);
       break;
     case 2:
-      text = const Text('M', style: style);
+      text = const Text('Mar', style: style);
       break;
     case 3:
-      text = const Text('A', style: style);
+      text = const Text('Apr', style: style);
       break;
     case 4:
-      text = const Text('M', style: style);
+      text = const Text('May', style: style);
       break;
     case 5:
-      text = const Text('J', style: style);
+      text = const Text('Jun', style: style);
       break;
     case 6:
-      text = const Text('J', style: style);
+      text = const Text('Jul', style: style);
       break;
     case 7:
-      text = const Text('A', style: style);
+      text = const Text('Aug', style: style);
       break;
     case 8:
-      text = const Text('S', style: style);
+      text = const Text('Sep', style: style);
       break;
     case 9:
-      text = const Text('O', style: style);
+      text = const Text('Oct', style: style);
       break;
     case 10:
-      text = const Text('N', style: style);
+      text = const Text('Nov', style: style);
       break;
     case 11:
-      text = const Text('D', style: style);
+      text = const Text('Dec', style: style);
       break;
     default:
       text = const Text('', style: style);
