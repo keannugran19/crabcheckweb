@@ -18,8 +18,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   // initiate firestore
   final FirestoreService firestoreService = FirestoreService();
 
-  // selected year
-  String selectedYear = '2024';
+  // dropdown button variables
+  String selectedYear = DateTime.now().year.toString();
+  List<String> years = [];
 
 // Monthly counts for each species
   List<double> totalCrabs = List<double>.filled(12, 0);
@@ -44,9 +45,9 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
   @override
   void initState() {
     super.initState();
-    selectedYear = '2024';
     fetchAllCounts(selectedYear);
     fetchCrabData(selectedYear);
+    generateYears();
   }
 
   Future<void> fetchAllCounts(String selectedYear) async {
@@ -139,10 +140,17 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
     }
   }
 
+  // generate years for dropdown button
+  void generateYears() {
+    int currentYear = DateTime.now().year;
+    for (int i = -1; i < 5; i++) {
+      years.add((currentYear + i).toString());
+    }
+  }
+
 // Restart the dashboard state
   void restart() {
     setState(() => isLoading = true);
-    selectedYear = selectedYear;
     fetchAllCounts(selectedYear);
     fetchCrabData(selectedYear);
   }
@@ -191,7 +199,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
           children: [
             DropdownButton<String>(
               value: selectedYear,
-              items: ['2024', '2025', '2026'].map((String year) {
+              items: years.map((String year) {
                 return DropdownMenuItem<String>(
                   value: year,
                   child: Text(year),
@@ -247,9 +255,6 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
                 value: unclassifiedCount,
                 topColor: Colors.red,
                 isActive: false,
-                onTap: () {
-                  // Handle tap
-                },
               ),
             ),
           ],

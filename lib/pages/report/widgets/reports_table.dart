@@ -13,18 +13,34 @@ class ReportsTable extends StatefulWidget {
 
 class _ReportsTableState extends State<ReportsTable> {
   static const _rowsPerPage = 5;
-  static const List<String> _years = ['2024', '2025', '2026', '2027', '2028'];
   static final _dateFormat = DateFormat('MMMM d, yyyy HH:mm');
 
   final FirestoreService _firestoreService = FirestoreService();
-  String? _selectedYear;
   int _currentPage = 0;
+
+  // dropdown button variables
+  String selectedYear = DateTime.now().year.toString();
+  List<String> years = [];
+
+  @override
+  void initState() {
+    super.initState();
+    generateYears();
+  }
 
   void _onYearChanged(String? value) {
     setState(() {
-      _selectedYear = value;
+      selectedYear = value!;
       _currentPage = 0;
     });
+  }
+
+  // generate years for dropdown button
+  void generateYears() {
+    int currentYear = DateTime.now().year;
+    for (int i = -1; i < 5; i++) {
+      years.add((currentYear + i).toString());
+    }
   }
 
   @override
@@ -45,9 +61,9 @@ class _ReportsTableState extends State<ReportsTable> {
     return Align(
       alignment: Alignment.centerRight,
       child: DropdownButton<String>(
-        value: _selectedYear,
+        value: selectedYear,
         hint: const Text("Select Year"),
-        items: _years.map((year) {
+        items: years.map((year) {
           return DropdownMenuItem<String>(
             value: year,
             child: Text(year),
@@ -60,7 +76,7 @@ class _ReportsTableState extends State<ReportsTable> {
 
   Widget _buildTable() {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _firestoreService.getFilteredStream(_selectedYear),
+      stream: _firestoreService.getFilteredStream(selectedYear),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
