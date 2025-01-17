@@ -42,7 +42,7 @@ class FirestoreService {
   }
 
   // filter data by year on reports table
-  Stream<QuerySnapshot<Map<String, dynamic>>> getFilteredStream(
+  Stream<QuerySnapshot<Map<String, dynamic>>> getFilteredCrabReports(
       String? selectedYear) {
     if (selectedYear == null) {
       return crabs.orderBy('timestamp', descending: true).snapshots();
@@ -59,10 +59,33 @@ class FirestoreService {
         .snapshots();
   }
 
+  // filter unclassified data on reports table
+  Stream<QuerySnapshot<Map<String, dynamic>>> getFilteredUnclassified(
+      String? selectedYear) {
+    if (selectedYear == null) {
+      return reports.orderBy('timestamp', descending: true).snapshots();
+    }
+
+    final int year = int.parse(selectedYear);
+    final start = DateTime(year);
+    final end = DateTime(year + 1);
+
+    return reports
+        .where('timestamp', isGreaterThanOrEqualTo: start)
+        .where('timestamp', isLessThan: end)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
   // get image from firestore and display
   Widget buildImageCell(String? imageUrl) {
     return imageUrl != null
-        ? Image.network(imageUrl, width: 60, height: 60)
+        ? Image.network(
+            imageUrl,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          )
         : const Text('No Image');
   }
 

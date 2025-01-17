@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:crabcheckweb1/services/firestore.dart';
+
+import '../../../constants/colors.dart';
 
 class ReportsTable extends StatefulWidget {
   const ReportsTable({super.key});
@@ -21,6 +24,8 @@ class _ReportsTableState extends State<ReportsTable> {
   // dropdown button variables
   String selectedYear = DateTime.now().year.toString();
   List<String> years = [];
+  List<String> view = ['Classified', 'Unclassified'];
+  String selectedView = 'Classified';
 
   @override
   void initState() {
@@ -43,12 +48,32 @@ class _ReportsTableState extends State<ReportsTable> {
     }
   }
 
+  // display this widget when there is no data
+  Widget hasNoData() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          'lib/assets/svg/empty-data.svg',
+          height: 200,
+          width: 200,
+        ),
+        const SizedBox(height: 15),
+        const Text(
+          "Empty Data",
+          style: TextStyle(
+              fontSize: 20, color: primaryColor, fontWeight: FontWeight.bold),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildYearFilter(),
+        _buildFilters(),
         SizedBox(
           height: (56 * _rowsPerPage) + 80,
           child: _buildTable(),
@@ -57,26 +82,45 @@ class _ReportsTableState extends State<ReportsTable> {
     );
   }
 
-  Widget _buildYearFilter() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: DropdownButton<String>(
-        value: selectedYear,
-        hint: const Text("Select Year"),
-        items: years.map((year) {
-          return DropdownMenuItem<String>(
-            value: year,
-            child: Text(year),
-          );
-        }).toList(),
-        onChanged: _onYearChanged,
-      ),
+  Widget _buildFilters() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        DropdownButton<String>(
+          value: selectedView,
+          hint: const Text("Select View"),
+          items: view.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? value) {
+            setState(() {
+              selectedView = value!;
+            });
+          },
+        ),
+        DropdownButton<String>(
+          value: selectedYear,
+          hint: const Text("Select Year"),
+          items: years.map((year) {
+            return DropdownMenuItem<String>(
+              value: year,
+              child: Text(year),
+            );
+          }).toList(),
+          onChanged: _onYearChanged,
+        ),
+      ],
     );
   }
 
   Widget _buildTable() {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _firestoreService.getFilteredStream(selectedYear),
+      stream: selectedView == 'Classified'
+          ? _firestoreService.getFilteredCrabReports(selectedYear)
+          : _firestoreService.getFilteredUnclassified(selectedYear),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -87,7 +131,7 @@ class _ReportsTableState extends State<ReportsTable> {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No data available.'));
+          return hasNoData();
         }
 
         final allRows = _createDataRows(snapshot.data!);
@@ -118,19 +162,35 @@ class _ReportsTableState extends State<ReportsTable> {
   List<DataColumn2> _buildColumns() {
     const textStyle = TextStyle(color: Colors.black87, fontSize: 14);
 
-    return const [
-      DataColumn2(size: ColumnSize.S, label: Text("Image", style: textStyle)),
-      DataColumn2(size: ColumnSize.M, label: Text("Species", style: textStyle)),
-      DataColumn2(
-          size: ColumnSize.S, label: Text('Edibility', style: textStyle)),
-      DataColumn2(
-        size: ColumnSize.L,
-        label: Text('Address', style: textStyle),
-      ),
-      DataColumn2(
-          size: ColumnSize.L, label: Text('Date & Time', style: textStyle)),
-      DataColumn2(size: ColumnSize.S, label: Text('')),
-    ];
+    return selectedView == 'Classified'
+        ? const [
+            DataColumn2(
+                size: ColumnSize.S, label: Text("Image", style: textStyle)),
+            DataColumn2(
+                size: ColumnSize.M, label: Text("Species", style: textStyle)),
+            DataColumn2(
+                size: ColumnSize.S, label: Text('Edibility', style: textStyle)),
+            DataColumn2(
+              size: ColumnSize.L,
+              label: Text('Address', style: textStyle),
+            ),
+            DataColumn2(
+                size: ColumnSize.L,
+                label: Text('Date & Time', style: textStyle)),
+            DataColumn2(size: ColumnSize.S, label: Text('')),
+          ]
+        : const [
+            DataColumn2(
+                size: ColumnSize.S, label: Text("Image", style: textStyle)),
+            DataColumn2(
+                size: ColumnSize.S, label: Text("Type", style: textStyle)),
+            DataColumn2(
+                size: ColumnSize.L, label: Text('Comment', style: textStyle)),
+            DataColumn2(
+                size: ColumnSize.M,
+                label: Text('Date & Time', style: textStyle)),
+            DataColumn2(size: ColumnSize.S, label: Text(''))
+          ];
   }
 
   List<DataRow> _createDataRows(QuerySnapshot<Map<String, dynamic>> snapshot) {
@@ -138,29 +198,58 @@ class _ReportsTableState extends State<ReportsTable> {
       final data = doc.data();
       final timestamp = data['timestamp'] as Timestamp?;
 
-      return DataRow(cells: [
-        DataCell(
-          GestureDetector(
-            onTap: () {
-              // Show the image preview dialog when the image is tapped
-              showDialog(
-                context: context,
-                builder: (context) => Dialog(
-                  child: InteractiveViewer(
-                    child: Image.network(data['image']),
-                  ),
+      return selectedView == 'Classified'
+          ? DataRow(cells: [
+              DataCell(
+                GestureDetector(
+                  onTap: () {
+                    // Show the image preview dialog when the image is tapped
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        child: InteractiveViewer(
+                          child: Image.network(
+                            data['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: _firestoreService.buildImageCell(data['image']),
                 ),
-              );
-            },
-            child: _firestoreService.buildImageCell(data['image']),
-          ),
-        ),
-        DataCell(Text(data['species']?.toString() ?? 'Unknown')),
-        DataCell(Text(data['edibility']?.toString() ?? 'Unknown')),
-        DataCell(Text(data['address']?.toString() ?? 'Unknown location')),
-        DataCell(Text(_formatTimestamp(timestamp))),
-        DataCell(_buildDeleteButton(doc.id)),
-      ]);
+              ),
+              DataCell(Text(data['species']?.toString() ?? 'Unknown')),
+              DataCell(Text(data['edibility']?.toString() ?? 'Unknown')),
+              DataCell(Text(data['address']?.toString() ?? 'Unknown location')),
+              DataCell(Text(_formatTimestamp(timestamp))),
+              DataCell(_buildDeleteButton(doc.id)),
+            ])
+          : DataRow(cells: [
+              DataCell(
+                GestureDetector(
+                  onTap: () {
+                    // Show the image preview dialog when the image is tapped
+                    showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        child: InteractiveViewer(
+                          child: Image.network(
+                            data['image'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  child: _firestoreService.buildImageCell(data['image']),
+                ),
+              ),
+              const DataCell(Text("Unclassified")),
+              DataCell(Text(data['specify']?.toString() ?? 'Not specified')),
+              DataCell(Text(_formatTimestamp(timestamp))),
+              DataCell(_buildDeleteButton(doc.id)),
+            ]);
     }).toList();
   }
 
