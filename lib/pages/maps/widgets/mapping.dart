@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -44,18 +45,21 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
           if (data['location'] is GeoPoint &&
               data['species'] is String &&
               data['timestamp'] is Timestamp &&
-              data['image'] is String) {
+              data['image'] is String &&
+              data['address'] is String) {
             final geoPoint = data['location'] as GeoPoint;
             final species = data['species']!;
             final timestamp = data['timestamp'] as Timestamp;
             final userImage = data['image'];
             final pinImage = CrabMapWidget.speciesPinMap[species];
+            final address = data['address'];
 
             if (pinImage != null) {
               final dateTime = timestamp.toDate();
-              final formattedDateTime =
-                  "${dateTime.month}-${dateTime.day.toString().padLeft(2, '0')}-${dateTime.year.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+              final DateFormat formatter = DateFormat('MMM. dd, yyyy');
+              final String formattedDateTime = formatter.format(dateTime);
 
+              // TODO zoom in on the selected marker
               return Marker(
                 point: LatLng(geoPoint.latitude, geoPoint.longitude),
                 child: LocationPin(
@@ -63,6 +67,7 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                   formattedDateTime: formattedDateTime,
                   pinImage: pinImage,
                   userImage: userImage,
+                  address: address,
                 ),
               );
             }

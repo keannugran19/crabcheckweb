@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class LocationPin extends StatefulWidget {
   final String formattedDateTime;
   final String species;
+  final String address;
   final String pinImage;
   final String userImage;
 
@@ -13,6 +14,7 @@ class LocationPin extends StatefulWidget {
     required this.pinImage,
     required this.userImage,
     required this.species,
+    required this.address,
   });
 
   @override
@@ -34,11 +36,11 @@ class _LocationPinState extends State<LocationPin> {
         alignment: Alignment.center,
         children: [
           OverflowBox(
-            maxWidth: 150,
-            maxHeight: 150,
+            maxWidth: 160,
+            maxHeight: 160,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: selected ? 150 : 40,
+              width: selected ? 160 : 40,
               curve: Curves.easeOutCubic,
               decoration: BoxDecoration(
                 color: selected ? Colors.white : Colors.transparent,
@@ -61,16 +63,24 @@ class _LocationPinState extends State<LocationPin> {
                               height: 5,
                             ),
                             Text(
-                              widget.formattedDateTime,
-                              style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 12),
-                            ),
-                            Text(
                               widget.species,
                               style: const TextStyle(
                                   color: textColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              widget.address,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: textColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                            Text(
+                              widget.formattedDateTime,
+                              style: TextStyle(
+                                  color: Colors.grey[700], fontSize: 12),
                             ),
                           ],
                         ),
