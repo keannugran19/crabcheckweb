@@ -7,7 +7,7 @@ class InfoCard extends StatelessWidget {
   final int value;
   final Color topColor;
   final bool isActive;
-  final Function() onTap;
+  final Function()? onTap;
 
   const InfoCard({
     super.key,
@@ -15,7 +15,7 @@ class InfoCard extends StatelessWidget {
     required this.value,
     required this.topColor,
     required this.isActive,
-    required this.onTap,
+    this.onTap,
     required this.image,
   });
 
