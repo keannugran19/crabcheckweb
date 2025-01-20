@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../services/firestore.dart';
 import '../../dashboard/pieChart/indicator.dart';
@@ -25,57 +25,201 @@ class CrabMapWidget extends StatefulWidget {
 }
 
 class _CrabMapWidgetState extends State<CrabMapWidget> {
+  // initiate firestore
+  final FirestoreService firestoreService = FirestoreService();
+
+  // Total counts for each species
+  int cardisomaCarnifexCount = 0;
+  int scyllaSerrataCount = 0;
+  int venitusLatreilleiCount = 0;
+  int portunosPelagicusCount = 0;
+  int metopograpsusSppCount = 0;
+  int totalCount = 0;
+
+  // dropdown value
   String _selectedSpecies = 'All';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAllCounts();
+  }
 
   void _updateSelectedSpecies(String species) {
     setState(() {
       _selectedSpecies = species;
     });
+    showCountDialog();
+  }
+
+  // function to get crab count
+  Future<void> fetchAllCounts() async {
+    Map<String, Future<int>> countFutures = {
+      'Cardisoma Carnifex':
+          firestoreService.fetchCountMap('Cardisoma Carnifex'),
+      'Scylla Serrata': firestoreService.fetchCountMap('Scylla Serrata'),
+      'Venitus Latreillei':
+          firestoreService.fetchCountMap('Venitus Latreillei'),
+      'Portunos Pelagicus':
+          firestoreService.fetchCountMap('Portunos Pelagicus'),
+      'Metopograpsus Spp': firestoreService.fetchCountMap('Metopograpsus Spp'),
+    };
+
+    Map<String, int> counts = {
+      for (var entry in countFutures.entries) entry.key: await entry.value,
+    };
+
+    setState(() {
+      cardisomaCarnifexCount = counts['Cardisoma Carnifex'] ?? 0;
+      scyllaSerrataCount = counts['Scylla Serrata'] ?? 0;
+      venitusLatreilleiCount = counts['Venitus Latreillei'] ?? 0;
+      portunosPelagicusCount = counts['Portunos Pelagicus'] ?? 0;
+      metopograpsusSppCount = counts['Metopograpsus Spp'] ?? 0;
+      totalCount = cardisomaCarnifexCount +
+          scyllaSerrataCount +
+          venitusLatreilleiCount +
+          portunosPelagicusCount +
+          metopograpsusSppCount;
+    });
+  }
+
+  Future<void> showCountDialog() async {
+    int count = 0;
+    String species = "";
+
+    switch (_selectedSpecies) {
+      case "Cardisoma Carnifex":
+        count = cardisomaCarnifexCount;
+        species = "Cardisoma Carnifex";
+        break;
+      case "Scylla Serrata":
+        count = scyllaSerrataCount;
+        species = "Scylla Serrata";
+        break;
+      case "Venitus Latreillei":
+        count = venitusLatreilleiCount;
+        species = "Venitus Latreillei";
+        break;
+      case "Portunos Pelagicus":
+        count = portunosPelagicusCount;
+        species = "Portunos Pelagicus";
+        break;
+      case "Metopograpsus Spp":
+        count = metopograpsusSppCount;
+        species = "Metopograpsus Spp";
+        break;
+      default:
+        count = totalCount;
+        species = "crabs";
+    }
+
+    var fontSize = 20.0;
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${count.toString()} ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: fontSize),
+                        ),
+                        TextSpan(
+                          text: 'total ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: fontSize),
+                        ),
+                        TextSpan(
+                          text: '$species ',
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic, fontSize: fontSize),
+                        ),
+                        TextSpan(
+                          text: 'found in the map',
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: fontSize),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        });
   }
 
   List<Marker> _buildMarkers(List<QueryDocumentSnapshot> docs) {
     return docs
-        .where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final species = data['species'] as String?;
-          return _selectedSpecies == 'All' || species == _selectedSpecies;
-        })
-        .map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          if (data['location'] is GeoPoint &&
-              data['species'] is String &&
-              data['timestamp'] is Timestamp &&
-              data['image'] is String &&
-              data['address'] is String) {
-            final geoPoint = data['location'] as GeoPoint;
-            final species = data['species']!;
-            final timestamp = data['timestamp'] as Timestamp;
-            final userImage = data['image'];
-            final pinImage = CrabMapWidget.speciesPinMap[species];
-            final address = data['address'];
-
-            if (pinImage != null) {
-              final dateTime = timestamp.toDate();
-              final DateFormat formatter = DateFormat('MMM. dd, yyyy');
-              final String formattedDateTime = formatter.format(dateTime);
-
-              // TODO zoom in on the selected marker
-              return Marker(
-                point: LatLng(geoPoint.latitude, geoPoint.longitude),
-                child: LocationPin(
-                  species: species,
-                  formattedDateTime: formattedDateTime,
-                  pinImage: pinImage,
-                  userImage: userImage,
-                  address: address,
-                ),
-              );
-            }
-          }
-          return null;
-        })
+        .where((doc) => _shouldIncludeMarker(doc))
+        .map((doc) => _createMarker(doc))
         .whereType<Marker>()
         .toList();
+  }
+
+  bool _shouldIncludeMarker(QueryDocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    final species = data['species'] as String?;
+    return _selectedSpecies == 'All' || species == _selectedSpecies;
+  }
+
+  Marker? _createMarker(QueryDocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    if (_isValidData(data)) {
+      final geoPoint = data['location'] as GeoPoint;
+      final species = data['species']!;
+      final timestamp = data['timestamp'] as Timestamp;
+      final userImage = data['image'];
+      final pinImage = CrabMapWidget.speciesPinMap[species];
+      final address = data['address'];
+
+      if (pinImage != null) {
+        final formattedDateTime = _formatTimestamp(timestamp);
+        return Marker(
+          point: LatLng(geoPoint.latitude, geoPoint.longitude),
+          child: LocationPin(
+            species: species,
+            formattedDateTime: formattedDateTime,
+            pinImage: pinImage,
+            userImage: userImage,
+            address: address,
+          ),
+        );
+      }
+    }
+    return null;
+  }
+
+  bool _isValidData(Map<String, dynamic> data) {
+    return data['location'] is GeoPoint &&
+        data['species'] is String &&
+        data['timestamp'] is Timestamp &&
+        data['image'] is String &&
+        data['address'] is String;
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    final dateTime = timestamp.toDate();
+    final DateFormat formatter = DateFormat('MMM. dd, yyyy');
+    return formatter.format(dateTime);
   }
 
   @override

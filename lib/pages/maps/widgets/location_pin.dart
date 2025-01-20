@@ -52,12 +52,13 @@ class _LocationPinState extends State<LocationPin> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
                             Image.network(
                               widget.userImage,
-                              width: 80,
+                              width: 100,
                               height: 80,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                             ),
                             const SizedBox(
                               height: 5,

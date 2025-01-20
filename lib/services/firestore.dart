@@ -36,6 +36,14 @@ class FirestoreService {
     return snapshot.size;
   }
 
+  // fetch crab count for mapping
+  Future<int> fetchCountMap(String species) async {
+    final query = crabs.where('species', isEqualTo: species);
+
+    final snapshot = await query.get();
+    return snapshot.size;
+  }
+
   // read data from firestore to reports table
   Stream<QuerySnapshot> getData() {
     return crabs.orderBy('timestamp', descending: true).snapshots();
