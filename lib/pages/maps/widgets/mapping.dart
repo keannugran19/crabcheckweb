@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crabcheckweb1/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
@@ -39,10 +40,21 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
   // dropdown value
   String _selectedSpecies = 'All';
 
+  // center of the map
+  final initialCenter = const LatLng(7.2885, 125.6938);
+
+  // map controller
+  final MapController mapController = MapController();
+
   @override
   void initState() {
     super.initState();
     fetchAllCounts();
+  }
+
+  // re-centers the map when clicked
+  void recenterMap() {
+    mapController.move(initialCenter, 13);
   }
 
   void _updateSelectedSpecies(String species) {
@@ -240,8 +252,9 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
               final markers = _buildMarkers(snapshot.data!.docs);
 
               return FlutterMap(
-                options: const MapOptions(
-                  initialCenter: LatLng(7.2885, 125.6938),
+                mapController: mapController,
+                options: MapOptions(
+                  initialCenter: initialCenter,
                   initialZoom: 13,
                   minZoom: 12,
                 ),
@@ -292,10 +305,10 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                         onSelectedSpeciesChanged: _updateSelectedSpecies,
                       ),
                       const SizedBox(height: 16),
-                      const Column(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Edible:',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -303,25 +316,25 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Indicator(
+                          const SizedBox(height: 4),
+                          const Indicator(
                             color: Colors.brown,
                             text: 'Scylla Serrata',
                             isSquare: true,
                           ),
-                          SizedBox(height: 4),
-                          Indicator(
+                          const SizedBox(height: 4),
+                          const Indicator(
                             color: Colors.blue,
                             text: 'Portunos Pelagicus',
                             isSquare: true,
                           ),
-                          Indicator(
+                          const Indicator(
                             color: Colors.orange,
                             text: 'Cardisoma Carnifex',
                             isSquare: true,
                           ),
-                          SizedBox(height: 16),
-                          Text(
+                          const SizedBox(height: 16),
+                          const Text(
                             'Inedible:',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -329,18 +342,30 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Indicator(
+                          const SizedBox(height: 4),
+                          const Indicator(
                             color: Colors.yellow,
                             text: 'Venitus Latreillei',
                             isSquare: true,
                           ),
-                          SizedBox(height: 4),
-                          Indicator(
+                          const SizedBox(height: 4),
+                          const Indicator(
                             color: Colors.purple,
                             text: 'Metopograpsus Spp',
                             isSquare: true,
                           ),
+                          const SizedBox(height: 10),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: recenterMap,
+                              child: const Text(
+                                'Recenter Map',
+                                style: TextStyle(color: backgroundColor),
+                              ),
+                            ),
+                          )
                         ],
                       )
                     ],
