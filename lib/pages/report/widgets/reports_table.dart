@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crabcheckweb1/services/printing_service.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,10 +16,13 @@ class ReportsTable extends StatefulWidget {
 }
 
 class _ReportsTableState extends State<ReportsTable> {
+  // call services
+  final FirestoreService _firestoreService = FirestoreService();
+  final PrintingService _printingService = PrintingService();
+
   static const _rowsPerPage = 5;
   static final _dateFormat = DateFormat('MMMM d, yyyy HH:mm');
 
-  final FirestoreService _firestoreService = FirestoreService();
   int _currentPage = 0;
 
   // dropdown button variables
@@ -100,6 +104,10 @@ class _ReportsTableState extends State<ReportsTable> {
               selectedView = value!;
             });
           },
+        ),
+        IconButton(
+          icon: const Icon(Icons.print),
+          onPressed: _printingService.printReport,
         ),
         DropdownButton<String>(
           value: selectedYear,
