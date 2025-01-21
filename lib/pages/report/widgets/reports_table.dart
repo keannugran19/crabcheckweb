@@ -106,7 +106,10 @@ class _ReportsTableState extends State<ReportsTable> {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.print),
+          icon: const Icon(
+            Icons.print,
+            color: Colors.black87,
+          ),
           onPressed: _printingService.printReport,
         ),
         DropdownButton<String>(
