@@ -7,12 +7,8 @@ class ReportsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Column(
-      children: [
-        SizedBox(
-          height: 50,
-        ),
-        ReportsTable()
-      ],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [ReportsTable()],
     );
   }
 }

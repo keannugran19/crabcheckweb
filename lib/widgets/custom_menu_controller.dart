@@ -28,6 +28,8 @@ class CustomMenuController extends GetxController {
         return _customIcon(Icons.signal_cellular_alt_sharp, itemName);
       case mappingPageRoute:
         return _customIcon(Icons.map, itemName);
+      case usersPageRoute:
+        return _customIcon(Icons.account_circle, itemName);
       default:
         return _customIcon(Icons.exit_to_app, itemName);
     }

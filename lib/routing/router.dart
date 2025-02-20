@@ -1,6 +1,7 @@
 import 'package:crabcheckweb1/pages/dashboard/dashboard.dart';
 import 'package:crabcheckweb1/pages/maps/maps.dart';
 import 'package:crabcheckweb1/pages/report/reports.dart';
+import 'package:crabcheckweb1/pages/users/users.dart';
 import 'package:crabcheckweb1/routing/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(const ReportsPage());
     case mappingPageRoute:
       return _getPageRoute(const MapsPage());
+    case usersPageRoute:
+      return _getPageRoute(const UsersPage());
     default:
       return _getPageRoute(const DashboardPage());
   }
