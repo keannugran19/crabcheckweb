@@ -64,6 +64,9 @@ class _UsersTableState extends State<UsersTable> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        const SizedBox(
+          height: 50,
+        ),
         SizedBox(
           height: (56 * _rowsPerPage) + 80,
           child: _buildTable(),
@@ -94,7 +97,9 @@ class _UsersTableState extends State<UsersTable> {
         return Column(
           children: [
             Expanded(child: _buildDataTable(paginatedRows)),
-            _buildPaginationControls(allRows.length),
+            allRows.length <= 4
+                ? Container()
+                : _buildPaginationControls(allRows.length),
           ],
         );
       },

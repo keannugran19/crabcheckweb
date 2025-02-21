@@ -77,6 +77,7 @@ class _ReportsTableState extends State<ReportsTable> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        const SizedBox(height: 50),
         _buildFilters(),
         SizedBox(
           height: (56 * _rowsPerPage) + 80,
@@ -151,7 +152,9 @@ class _ReportsTableState extends State<ReportsTable> {
         return Column(
           children: [
             Expanded(child: _buildDataTable(paginatedRows)),
-            _buildPaginationControls(allRows.length),
+            allRows.length <= 4
+                ? Container()
+                : _buildPaginationControls(allRows.length),
           ],
         );
       },
