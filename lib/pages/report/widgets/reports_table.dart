@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,10 +18,10 @@ class _ReportsTableState extends State<ReportsTable> {
   final FirestoreService _firestoreService = FirestoreService();
   final PrintingService _printingService = PrintingService();
 
-  static const int _rowsPerPage = 5;
+  int _rowsPerPage = 5;
   static final DateFormat _dateFormat = DateFormat('MMMM d, yyyy HH:mm');
 
-  final int _currentPage = 0;
+  int _currentPage = 0;
   String selectedYear = DateTime.now().year.toString();
   List<String> years = [];
   List<String> view = ['Classified', 'Unclassified'];
@@ -47,7 +47,7 @@ class _ReportsTableState extends State<ReportsTable> {
     return Column(
       children: [
         _buildFilters(),
-        SizedBox(height: 400, child: _buildTable()),
+        SizedBox(height: 400, width: double.infinity, child: _buildTable()),
       ],
     );
   }
@@ -117,23 +117,34 @@ class _ReportsTableState extends State<ReportsTable> {
 
         _dataSource = ReportDataSource(context, data, selectedView);
 
-        return SfDataGrid(
-          source: _dataSource,
-          columns: _buildColumns(),
+        return PaginatedDataTable(
+          header: const Text('Reports'),
           rowsPerPage: _rowsPerPage,
-          allowSorting: true,
+          availableRowsPerPage: const [5, 10, 20],
+          onRowsPerPageChanged: (int? value) {
+            setState(() {
+              _rowsPerPage = value!;
+            });
+          },
+          onPageChanged: (int page) {
+            setState(() {
+              _currentPage = page;
+            });
+          },
+          columns: _buildColumns(),
+          source: _dataSource,
         );
       },
     );
   }
 
-  List<GridColumn> _buildColumns() {
+  List<DataColumn> _buildColumns() {
     return [
-      GridColumn(columnName: 'Image', label: const Text('Image')),
-      GridColumn(columnName: 'Species', label: const Text('Species')),
-      GridColumn(columnName: 'Edibility', label: const Text('Edibility')),
-      GridColumn(columnName: 'Address', label: const Text('Address')),
-      GridColumn(columnName: 'DateTime', label: const Text('Date & Time')),
+      const DataColumn(label: Text('Image')),
+      const DataColumn(label: Text('Species')),
+      const DataColumn(label: Text('Edibility')),
+      const DataColumn(label: Text('Address')),
+      const DataColumn(label: Text('Date & Time')),
     ];
   }
 }
@@ -156,7 +167,7 @@ class ReportModel {
   });
 }
 
-class ReportDataSource extends DataGridSource {
+class ReportDataSource extends DataTableSource {
   final BuildContext context;
   final List<ReportModel> reports;
   final String selectedView;
@@ -164,39 +175,23 @@ class ReportDataSource extends DataGridSource {
   ReportDataSource(this.context, this.reports, this.selectedView);
 
   @override
-  List<DataGridRow> get rows => reports
-      .map(
-        (report) => DataGridRow(cells: [
-          DataGridCell(columnName: 'Image', value: report.image),
-          DataGridCell(columnName: 'Species', value: report.species),
-          DataGridCell(columnName: 'Edibility', value: report.edibility),
-          DataGridCell(columnName: 'Address', value: report.address),
-          DataGridCell(columnName: 'DateTime', value: report.dateTime),
-        ]),
-      )
-      .toList();
+  DataRow getRow(int index) {
+    final ReportModel report = reports[index];
+    return DataRow(cells: [
+      DataCell(Text(report.image)),
+      DataCell(Text(report.species)),
+      DataCell(Text(report.edibility)),
+      DataCell(Text(report.address)),
+      DataCell(Text(report.dateTime)),
+    ]);
+  }
 
   @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    final FirestoreService firestoreService = FirestoreService();
+  int get rowCount => reports.length;
 
-    return DataGridRowAdapter(
-        cells: row.getCells().map((cell) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        alignment: Alignment.centerLeft,
-        child: cell.columnName == 'Image'
-            ? GestureDetector(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => Dialog(
-                    child: InteractiveViewer(child: Image.network(cell.value)),
-                  ),
-                ),
-                child: firestoreService.buildImageCell(cell.value),
-              )
-            : Text(cell.value.toString()),
-      );
-    }).toList());
-  }
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get selectedRowCount => 0;
 }

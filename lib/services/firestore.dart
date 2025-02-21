@@ -90,6 +90,9 @@ class FirestoreService {
     return imageUrl != null
         ? Image.network(
             imageUrl,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return const CircularProgressIndicator();
