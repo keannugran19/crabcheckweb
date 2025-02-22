@@ -122,13 +122,10 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         child: PieChart(
           PieChartData(
             pieTouchData: pieTouchData(),
-            borderData: FlBorderData(show: false),
             sectionsSpace: 2,
             centerSpaceRadius: 35,
             sections: showingSections(),
           ),
-          swapAnimationDuration: const Duration(milliseconds: 150),
-          swapAnimationCurve: Curves.easeInOut,
         ),
       ),
     );
@@ -171,97 +168,96 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   List<PieChartSectionData> showingSections() {
     return List.generate(5, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 15.0; // Increased font sizes
-      final radius = isTouched ? 102.0 : 98.0;
+      const fontSize = 15.0; // Increased font sizes
+      const radius = 98.0;
       final shadows = [
         Shadow(color: Colors.black.withOpacity(0.2), blurRadius: 2)
       ];
+
+      // Title style
+      TextStyle titleStyle = TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        shadows: shadows,
+      );
+
       switch (i) {
         case 0:
           return PieChartSectionData(
-            badgeWidget: const PieBadge(
-                imgAsset: 'lib/assets/images/crabs/cardisomaCarnifex.jpg'),
-            badgePositionPercentageOffset: 1,
-            color: const Color(0xFFFF9800),
-            value: widget.cardisomaCarnifexCount.toDouble(),
-            title:
-                '${((widget.cardisomaCarnifexCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
+              borderSide: BorderSide(
+                color: Colors.orange[900]!,
+                width: isTouched ? 4 : 0,
+              ),
+              radius: radius,
+              badgeWidget: const PieBadge(
+                  imgAsset: 'lib/assets/images/crabs/cardisomaCarnifex.jpg'),
+              badgePositionPercentageOffset: 1,
+              color: const Color(0xFFFF9800),
+              value: widget.cardisomaCarnifexCount.toDouble(),
+              title:
+                  '${((widget.cardisomaCarnifexCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
+              titleStyle: titleStyle);
         case 1:
           return PieChartSectionData(
-            badgeWidget: const PieBadge(
-                imgAsset: 'lib/assets/images/crabs/scyllaSerrata.jpg'),
-            badgePositionPercentageOffset: 1,
-            color: const Color(0xFF795548),
-            value: widget.scyllaSerrataCount.toDouble(),
-            title:
-                '${((widget.scyllaSerrataCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
+              borderSide: BorderSide(
+                color: Colors.brown[900]!,
+                width: isTouched ? 4 : 0,
+              ),
+              radius: radius,
+              badgeWidget: const PieBadge(
+                  imgAsset: 'lib/assets/images/crabs/scyllaSerrata.jpg'),
+              badgePositionPercentageOffset: 1,
+              color: const Color(0xFF795548),
+              value: widget.scyllaSerrataCount.toDouble(),
+              title:
+                  '${((widget.scyllaSerrataCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
+              titleStyle: titleStyle);
         case 2:
           return PieChartSectionData(
-            badgeWidget: const PieBadge(
-                imgAsset: 'lib/assets/images/crabs/venitusLatreillei.jpeg'),
-            badgePositionPercentageOffset: 1,
-            color: const Color(0xFFFDD835),
-            value: widget.venitusLatreilleiCount.toDouble(),
-            title:
-                '${((widget.venitusLatreilleiCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
+              borderSide: BorderSide(
+                color: Colors.yellow[700]!,
+                width: isTouched ? 4 : 0,
+              ),
+              radius: radius,
+              badgeWidget: const PieBadge(
+                  imgAsset: 'lib/assets/images/crabs/venitusLatreillei.jpeg'),
+              badgePositionPercentageOffset: 1,
+              color: const Color(0xFFFDD835),
+              value: widget.venitusLatreilleiCount.toDouble(),
+              title:
+                  '${((widget.venitusLatreilleiCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
+              titleStyle: titleStyle);
         case 3:
           return PieChartSectionData(
-            badgeWidget: const PieBadge(
-                imgAsset: 'lib/assets/images/crabs/portunosPelagicus.jpg'),
-            badgePositionPercentageOffset: 1,
-            color: const Color(0xFF2196F3),
-            value: widget.portunosPelagicusCount.toDouble(),
-            title:
-                '${((widget.portunosPelagicusCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
+              borderSide: BorderSide(
+                color: Colors.blue[900]!,
+                width: isTouched ? 4 : 0,
+              ),
+              radius: radius,
+              badgeWidget: const PieBadge(
+                  imgAsset: 'lib/assets/images/crabs/portunosPelagicus.jpg'),
+              badgePositionPercentageOffset: 1,
+              color: const Color(0xFF2196F3),
+              value: widget.portunosPelagicusCount.toDouble(),
+              title:
+                  '${((widget.portunosPelagicusCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
+              titleStyle: titleStyle);
         case 4:
           return PieChartSectionData(
-            badgeWidget: const PieBadge(
-                imgAsset: 'lib/assets/images/crabs/metopograpsusSp.jpeg'),
-            badgePositionPercentageOffset: 1,
-            color: const Color(0xFF9C27B0),
-            value: widget.metopograpsusSppCount.toDouble(),
-            title:
-                '${((widget.metopograpsusSppCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
+              borderSide: BorderSide(
+                color: Colors.purple[900]!,
+                width: isTouched ? 4 : 0,
+              ),
+              radius: radius,
+              badgeWidget: const PieBadge(
+                  imgAsset: 'lib/assets/images/crabs/metopograpsusSp.jpeg'),
+              badgePositionPercentageOffset: 1,
+              color: const Color(0xFF9C27B0),
+              value: widget.metopograpsusSppCount.toDouble(),
+              title:
+                  '${((widget.metopograpsusSppCount / getTotalCount()) * 100).toStringAsFixed(1)}%',
+              titleStyle: titleStyle);
         default:
           throw Error();
       }
