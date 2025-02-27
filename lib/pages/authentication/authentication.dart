@@ -258,22 +258,22 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have admin credentials?",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    TextButton(
-                        onPressed: redirect,
-                        child: const Text("Request IT Support",
-                            style: TextStyle(fontSize: 12)))
-                  ],
-                )
+                // const SizedBox(
+                //   height: 15,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       "Don't have admin credentials?",
+                //       style: TextStyle(fontSize: 12),
+                //     ),
+                //     TextButton(
+                //         onPressed: redirect,
+                //         child: const Text("Request IT Support",
+                //             style: TextStyle(fontSize: 12)))
+                //   ],
+                // )
               ],
             ),
           ),
