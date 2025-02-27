@@ -89,7 +89,7 @@ class _ReportsTableState extends State<ReportsTable> {
 
   Widget _buildFilters() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         DropdownButton<String>(
           value: selectedView,
@@ -106,13 +106,7 @@ class _ReportsTableState extends State<ReportsTable> {
             });
           },
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.print,
-            color: Colors.black87,
-          ),
-          onPressed: _printingService.printReport,
-        ),
+        const SizedBox(width: 20),
         DropdownButton<String>(
           value: selectedYear,
           hint: const Text("Select Year"),
@@ -123,6 +117,15 @@ class _ReportsTableState extends State<ReportsTable> {
             );
           }).toList(),
           onChanged: _onYearChanged,
+        ),
+        const Spacer(),
+        const Text('Print: '),
+        IconButton(
+          icon: const Icon(
+            Icons.print,
+            color: Colors.black87,
+          ),
+          onPressed: _printingService.printReport,
         ),
       ],
     );
