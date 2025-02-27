@@ -1,5 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -39,92 +41,69 @@ class PrintingService {
       };
     }).toList());
 
-    // Add page to PDF with custom table and A4 paper size
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('Crab Classification Report',
-                        style: const pw.TextStyle(fontSize: 24)),
-                    pw.Text(
-                        'Generated on: ${DateFormat('MMM. d, yyyy').format(DateTime.now())}'),
-                  ],
-                ),
-                pw.SizedBox(height: 20),
-                pw.Table(
-                  border: pw.TableBorder.all(),
-                  children: [
-                    // Add headers
-                    pw.TableRow(
-                      children: [
-                        pw.Padding(
-                          padding: padding,
-                          child: pw.Text('Species',
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        ),
-                        pw.Padding(
-                          padding: padding,
-                          child: pw.Text('Edibility',
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        ),
-                        pw.Padding(
-                          padding: padding,
-                          child: pw.Text('Address',
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        ),
-                        pw.Padding(
-                          padding: padding,
-                          child: pw.Text('Date',
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                    // Add data rows
-                    ...dataRows.map((row) {
-                      return pw.TableRow(
-                        children: [
-                          pw.Padding(
-                            padding: padding,
-                            child: pw.Text(
-                                row['species']?.toString() ?? 'Unknown'),
-                          ),
-                          pw.Padding(
-                            padding: padding,
-                            child: pw.Text(
-                                row['edibility']?.toString() ?? 'Unknown'),
-                          ),
-                          pw.Padding(
-                            padding: padding,
-                            child: pw.Text(row['address']?.toString() ??
-                                'Unknown address'),
-                          ),
-                          pw.Padding(
-                            padding: padding,
-                            child: pw.Text(
-                                row['timestamp']?.toString() ?? 'No Date'),
-                          ),
-                        ],
-                      );
-                    }),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+    // build table
+    pw.Widget buildTable(List<Map<String, dynamic>> dataRows) {
+      return pw.TableHelper.fromTextArray(
+        headers: ['Species', 'Edibility', 'Address', 'Date'],
+        data: dataRows
+            .map((row) => [
+                  row['species'],
+                  row['edibility'],
+                  row['address'],
+                  row['timestamp']
+                ])
+            .toList(),
+        cellPadding: padding,
+        cellAlignment: pw.Alignment.centerLeft,
+        cellStyle: const pw.TextStyle(fontSize: 12),
+        headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+      );
+    }
+
+    // header and footer of pdf
+    final profileImage = pw.MemoryImage(
+      (await rootBundle.load('lib/assets/images/headerfooter.png'))
+          .buffer
+          .asUint8List(),
     );
+
+    // create pages
+    pdf.addPage(
+      pw.MultiPage(
+          pageTheme: pw.PageTheme(
+              margin:
+                  const pw.EdgeInsets.symmetric(horizontal: 50, vertical: 120),
+              pageFormat: PdfPageFormat.a4,
+              orientation: pw.PageOrientation.portrait,
+              buildBackground: (pw.Context context) {
+                return pw.FullPage(
+                  ignoreMargins: true,
+                  child: pw.Image(profileImage, fit: pw.BoxFit.fill),
+                );
+              }),
+          build: (pw.Context context) {
+            return <pw.Widget>[
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text('Crab Classification Report',
+                      style: pw.TextStyle(
+                          fontSize: 14, fontWeight: pw.FontWeight.bold)),
+                  pw.Text(
+                      'Generated on: ${DateFormat('MMM. d, yyyy').format(DateTime.now())}'),
+                ],
+              ),
+              pw.SizedBox(height: 10),
+              buildTable(dataRows),
+              pw.SizedBox(height: 5),
+              pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
+                pw.Text('Prepared By: Alex Tapanan'),
+              ])
+            ];
+          }),
+    );
+
+    // return pdf.save();
 
     // Save PDF as bytes
     final bytes = await pdf.save();
