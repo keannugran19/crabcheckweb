@@ -25,6 +25,8 @@ class _ReportsTableState extends State<ReportsTable> {
 
   int _currentPage = 0;
 
+  bool isLoading = false;
+
   // dropdown button variables
   String selectedYear = DateTime.now().year.toString();
   List<String> years = [];
@@ -50,6 +52,18 @@ class _ReportsTableState extends State<ReportsTable> {
     for (int i = -1; i < 5; i++) {
       years.add((currentYear + i).toString());
     }
+  }
+
+  void printIsPressed() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    await _printingService.printReport();
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   // display this widget when there is no data
@@ -121,11 +135,16 @@ class _ReportsTableState extends State<ReportsTable> {
         const Spacer(),
         const Text('Print: '),
         IconButton(
-          icon: const Icon(
-            Icons.print,
-            color: Colors.black87,
-          ),
-          onPressed: _printingService.printReport,
+          icon: isLoading
+              ? const Icon(
+                  Icons.print,
+                  color: Colors.grey,
+                )
+              : const Icon(
+                  Icons.print,
+                  color: Colors.black87,
+                ),
+          onPressed: isLoading ? null : printIsPressed,
         ),
       ],
     );
