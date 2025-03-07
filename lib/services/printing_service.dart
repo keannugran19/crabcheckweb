@@ -1,5 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -94,9 +95,17 @@ class PrintingService {
               ),
               pw.SizedBox(height: 10),
               buildTable(dataRows),
-              pw.SizedBox(height: 5),
+              pw.SizedBox(height: 30),
               pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
-                pw.Text('Prepared By: Alex Tapanan'),
+                pw.Column(
+                  children: [
+                    pw.Text('Prepared By:_______________'),
+                    pw.SizedBox(height: 30),
+                    pw.Text('Reviewed By:_______________'),
+                    pw.SizedBox(height: 30),
+                    pw.Text('Approved By:_______________')
+                  ],
+                ),
               ])
             ];
           }),
@@ -111,7 +120,7 @@ class PrintingService {
     final blob = html.Blob([bytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     html.AnchorElement(href: url)
-      ..setAttribute('download', 'report.pdf')
+      ..setAttribute('download', 'crab_report.pdf')
       ..click();
     html.Url.revokeObjectUrl(url);
   }
