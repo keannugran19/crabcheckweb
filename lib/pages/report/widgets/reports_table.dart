@@ -29,7 +29,7 @@ class _ReportsTableState extends State<ReportsTable> {
 
   // dropdown button variables
   String selectedYear = DateTime.now().year.toString();
-  List<String> years = [];
+  List<String> years = ['All'];
   List<String> view = ['Classified', 'Unclassified'];
   String selectedView = 'Classified';
 
@@ -105,6 +105,7 @@ class _ReportsTableState extends State<ReportsTable> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        // Dropdown button for selecting view
         DropdownButton<String>(
           value: selectedView,
           hint: const Text("Select View"),
@@ -121,6 +122,7 @@ class _ReportsTableState extends State<ReportsTable> {
           },
         ),
         const SizedBox(width: 20),
+        // Dropdown button for selecting year
         DropdownButton<String>(
           value: selectedYear,
           hint: const Text("Select Year"),

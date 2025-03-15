@@ -51,8 +51,8 @@ class FirestoreService {
 
   // filter data by year on reports table
   Stream<QuerySnapshot<Map<String, dynamic>>> getFilteredCrabReports(
-      String? selectedYear) {
-    if (selectedYear == null) {
+      String selectedYear) {
+    if (selectedYear == "All") {
       return crabs.orderBy('timestamp', descending: true).snapshots();
     }
 
@@ -69,8 +69,8 @@ class FirestoreService {
 
   // filter unclassified data on reports table
   Stream<QuerySnapshot<Map<String, dynamic>>> getFilteredUnclassified(
-      String? selectedYear) {
-    if (selectedYear == null) {
+      String selectedYear) {
+    if (selectedYear == "All") {
       return reports.orderBy('timestamp', descending: true).snapshots();
     }
 
