@@ -11,6 +11,10 @@ class FirestoreService {
 
   // fetch crab data for a specific year
   Future<List<QueryDocumentSnapshot>> fetchCrabDataForYear(String year) async {
+    if (year == "All") {
+      QuerySnapshot snapshot = await crabs.get();
+      return snapshot.docs;
+    }
     DateTime startOfYear = DateTime(int.parse(year), 1, 1);
     DateTime endOfYear = DateTime(int.parse(year), 12, 31, 23, 59, 59);
 
@@ -24,6 +28,12 @@ class FirestoreService {
 
   // fetch crab count per species per year
   Future<int> fetchCount(String species, String selectedYear) async {
+    if (selectedYear == "All") {
+      final query = crabs.where('species', isEqualTo: species);
+      final snapshot = await query.get();
+      return snapshot.size;
+    }
+
     DateTime startOfYear = DateTime(int.parse(selectedYear), 1, 1);
     DateTime endOfYear = DateTime(int.parse(selectedYear), 12, 31, 23, 59, 59);
 

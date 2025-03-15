@@ -20,7 +20,7 @@ class _DashboardPageLargeScreenState extends State<DashboardPageLargeScreen> {
 
   // dropdown button variables
   String selectedYear = DateTime.now().year.toString();
-  List<String> years = [];
+  List<String> years = ["All"];
 
 // Monthly counts for each species
   List<double> totalCrabs = List<double>.filled(12, 0);
