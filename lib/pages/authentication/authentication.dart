@@ -82,6 +82,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         if (result != null) {
           devtools.log(result.toString());
 
+          // ignore: use_build_context_synchronously
           Navigator.of(context).push(
             MaterialPageRoute(
               fullscreenDialog: true,
