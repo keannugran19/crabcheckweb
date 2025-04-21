@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crabcheckweb1/constants/colors.dart';
+import 'package:crabcheckweb1/pages/maps/widgets/polygon_points.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
@@ -263,6 +264,22 @@ class _CrabMapWidgetState extends State<CrabMapWidget> {
                     urlTemplate:
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.app',
+                  ),
+                  PolygonLayer(
+                    polygons: [
+                      // Large rectangle (outer shell)
+                      Polygon(
+                        points: [
+                          const LatLng(-90, -180),
+                          const LatLng(-90, 180),
+                          const LatLng(90, 180),
+                          const LatLng(90, -180),
+                          const LatLng(-90, -180),
+                          ...polygonPoints.reversed,
+                        ],
+                        color: Colors.grey.withOpacity(0.8),
+                      ),
+                    ],
                   ),
                   MarkerLayer(markers: markers),
                 ],
